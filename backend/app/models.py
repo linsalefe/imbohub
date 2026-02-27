@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Text, DateTime, BigInteger, Integer, Boolean, ForeignKey, func, Table
+from sqlalchemy import Column, String, Text, DateTime, BigInteger, Integer, Boolean, ForeignKey, Numeric, func, Table
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -10,6 +10,41 @@ contact_tags = Table(
     Column("tag_id", Integer, ForeignKey("tags.id"), primary_key=True),
 )
 
+
+# ==================== PIPELINES ====================
+
+class Pipeline(Base):
+    __tablename__ = "pipelines"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(100), nullable=False)
+    description = Column(Text, nullable=True)
+    is_default = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    stages = relationship("PipelineStage", back_populates="pipeline", order_by="PipelineStage.position")
+    contacts = relationship("Contact", back_populates="pipeline")
+
+
+class PipelineStage(Base):
+    __tablename__ = "pipeline_stages"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    pipeline_id = Column(Integer, ForeignKey("pipelines.id", ondelete="CASCADE"), nullable=False)
+    name = Column(String(100), nullable=False)
+    key = Column(String(50), nullable=False)
+    color = Column(String(20), default="#6366f1")
+    position = Column(Integer, nullable=False, default=0)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, server_default=func.now())
+
+    pipeline = relationship("Pipeline", back_populates="stages")
+    contacts = relationship("Contact", back_populates="stage")
+
+
+# ==================== CANAIS ====================
 
 class Channel(Base):
     __tablename__ = "channels"
@@ -35,24 +70,42 @@ class Channel(Base):
     messages = relationship("Message", back_populates="channel")
 
 
+# ==================== CONTATOS ====================
+
 class Contact(Base):
     __tablename__ = "contacts"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     wa_id = Column(String(20), unique=True, nullable=False, index=True)
     name = Column(String(255), nullable=True)
+    email = Column(String(255), nullable=True)
     lead_status = Column(String(30), default="novo")
     notes = Column(Text, nullable=True)
     ai_active = Column(Boolean, default=False)
     channel_id = Column(Integer, ForeignKey("channels.id"))
     assigned_to = Column(Integer, ForeignKey("users.id"), nullable=True)
+    # Campos imobiliários
+    budget_min = Column(Numeric(15, 2), nullable=True)
+    budget_max = Column(Numeric(15, 2), nullable=True)
+    interest_type = Column(String(20), nullable=True)  # compra, aluguel, ambos
+    preferred_neighborhoods = Column(Text, nullable=True)  # JSON array
+    preferred_bedrooms = Column(Integer, nullable=True)
+    preferred_property_type = Column(String(50), nullable=True)  # apartamento, casa, terreno, comercial
+    # Pipeline
+    pipeline_id = Column(Integer, ForeignKey("pipelines.id"), nullable=True)
+    stage_id = Column(Integer, ForeignKey("pipeline_stages.id"), nullable=True)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
     messages = relationship("Message", back_populates="contact")
     tags = relationship("Tag", secondary=contact_tags, back_populates="contacts")
     channel = relationship("Channel", back_populates="contacts")
+    pipeline = relationship("Pipeline", back_populates="contacts")
+    stage = relationship("PipelineStage", back_populates="contacts")
+    property_interests = relationship("PropertyInterest", back_populates="contact")
 
+
+# ==================== MENSAGENS ====================
 
 class Message(Base):
     __tablename__ = "messages"
@@ -73,6 +126,8 @@ class Message(Base):
     channel = relationship("Channel", back_populates="messages")
 
 
+# ==================== TAGS ====================
+
 class Tag(Base):
     __tablename__ = "tags"
 
@@ -83,6 +138,8 @@ class Tag(Base):
 
     contacts = relationship("Contact", secondary=contact_tags, back_populates="tags")
 
+
+# ==================== USUÁRIOS ====================
 
 class User(Base):
     __tablename__ = "users"
@@ -95,6 +152,83 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, server_default=func.now())
 
+
+# ==================== IMÓVEIS ====================
+
+class Property(Base):
+    __tablename__ = "properties"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String(255), nullable=False)
+    type = Column(String(50), nullable=False)  # apartamento, casa, terreno, comercial, rural
+    transaction_type = Column(String(20), nullable=False, default="venda")  # venda, aluguel, ambos
+    status = Column(String(30), default="disponivel")  # disponivel, reservado, vendido, alugado, inativo
+    price = Column(Numeric(15, 2), nullable=True)
+    condo_fee = Column(Numeric(10, 2), nullable=True)
+    iptu = Column(Numeric(10, 2), nullable=True)
+    area_total = Column(Numeric(10, 2), nullable=True)
+    area_built = Column(Numeric(10, 2), nullable=True)
+    bedrooms = Column(Integer, default=0)
+    bathrooms = Column(Integer, default=0)
+    parking_spots = Column(Integer, default=0)
+    suites = Column(Integer, default=0)
+    description = Column(Text, nullable=True)
+    # Endereço
+    address_street = Column(String(255), nullable=True)
+    address_number = Column(String(20), nullable=True)
+    address_complement = Column(String(100), nullable=True)
+    address_neighborhood = Column(String(100), nullable=True)
+    address_city = Column(String(100), nullable=True)
+    address_state = Column(String(2), nullable=True)
+    address_zip = Column(String(10), nullable=True)
+    latitude = Column(Numeric(10, 7), nullable=True)
+    longitude = Column(Numeric(10, 7), nullable=True)
+    # Extras
+    photos = Column(Text, nullable=True)  # JSON array de URLs
+    features = Column(Text, nullable=True)  # JSON array: piscina, churrasqueira, etc
+    notes = Column(Text, nullable=True)
+    created_by = Column(Integer, ForeignKey("users.id"), nullable=True)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    creator = relationship("User", backref="properties")
+    nearby_places = relationship("PropertyNearbyPlace", back_populates="property", cascade="all, delete-orphan")
+    interests = relationship("PropertyInterest", back_populates="property", cascade="all, delete-orphan")
+
+
+class PropertyNearbyPlace(Base):
+    __tablename__ = "property_nearby_places"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    property_id = Column(Integer, ForeignKey("properties.id", ondelete="CASCADE"), nullable=False)
+    category = Column(String(50), nullable=False)  # escola, hospital, supermercado, metro, parque, banco, restaurante
+    name = Column(String(255), nullable=False)
+    address = Column(String(255), nullable=True)
+    distance_meters = Column(Integer, nullable=True)
+    duration_walking = Column(String(20), nullable=True)
+    latitude = Column(Numeric(10, 7), nullable=True)
+    longitude = Column(Numeric(10, 7), nullable=True)
+    rating = Column(Numeric(3, 1), nullable=True)
+    created_at = Column(DateTime, server_default=func.now())
+
+    property = relationship("Property", back_populates="nearby_places")
+
+
+class PropertyInterest(Base):
+    __tablename__ = "property_interests"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    contact_wa_id = Column(String(20), ForeignKey("contacts.wa_id"), nullable=False, index=True)
+    property_id = Column(Integer, ForeignKey("properties.id", ondelete="CASCADE"), nullable=False, index=True)
+    interest_level = Column(String(20), default="baixo")  # baixo, medio, alto
+    notes = Column(Text, nullable=True)
+    created_at = Column(DateTime, server_default=func.now())
+
+    contact = relationship("Contact", back_populates="property_interests")
+    property = relationship("Property", back_populates="interests")
+
+
+# ==================== EXACT LEADS ====================
 
 class ExactLead(Base):
     __tablename__ = "exact_leads"
@@ -113,6 +247,8 @@ class ExactLead(Base):
     update_date = Column(DateTime, nullable=True)
     synced_at = Column(DateTime, server_default=func.now())
 
+
+# ==================== IA ====================
 
 class AIConfig(Base):
     __tablename__ = "ai_configs"
@@ -154,7 +290,7 @@ class AIConversationSummary(Base):
     status = Column(String(30), default="em_atendimento_ia")
     summary = Column(Text, nullable=True)
     lead_name = Column(String(255), nullable=True)
-    lead_course = Column(String(255), nullable=True)
+    lead_interest = Column(String(255), nullable=True)
     ai_messages_count = Column(Integer, default=0)
     human_took_over = Column(Boolean, default=False)
     started_at = Column(DateTime, server_default=func.now())
@@ -164,6 +300,8 @@ class AIConversationSummary(Base):
     contact = relationship("Contact", backref="ai_summaries")
     channel = relationship("Channel", backref="ai_summaries")
 
+
+# ==================== LIGAÇÕES ====================
 
 class CallLog(Base):
     __tablename__ = "call_logs"
@@ -188,6 +326,10 @@ class CallLog(Base):
 
     user = relationship("User", backref="call_logs")
     channel = relationship("Channel", backref="call_logs")
+
+
+# ==================== LANDING PAGES ====================
+
 class LandingPage(Base):
     __tablename__ = "landing_pages"
 
@@ -195,7 +337,7 @@ class LandingPage(Base):
     channel_id = Column(Integer, ForeignKey("channels.id"), nullable=False)
     slug = Column(String(100), unique=True, nullable=False, index=True)
     title = Column(String(255), nullable=False)
-    template = Column(String(50), nullable=False, default="curso")
+    template = Column(String(50), nullable=False, default="imovel")
     config = Column(Text, nullable=False)  # JSON com textos, imagens, cores
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, server_default=func.now())
@@ -214,7 +356,11 @@ class FormSubmission(Base):
     name = Column(String(255), nullable=False)
     phone = Column(String(30), nullable=False)
     email = Column(String(255), nullable=True)
-    course = Column(String(255), nullable=True)
+    interest = Column(String(255), nullable=True)
+    property_type = Column(String(50), nullable=True)
+    transaction_type = Column(String(20), nullable=True)
+    budget = Column(String(50), nullable=True)
+    neighborhood = Column(String(100), nullable=True)
     utm_source = Column(String(100), nullable=True)
     utm_medium = Column(String(100), nullable=True)
     utm_campaign = Column(String(100), nullable=True)
@@ -224,27 +370,36 @@ class FormSubmission(Base):
     landing_page = relationship("LandingPage", back_populates="submissions")
     channel = relationship("Channel", backref="form_submissions")
 
+
+# ==================== AGENDAMENTOS ====================
+
 class Schedule(Base):
     __tablename__ = "schedules"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    type = Column(String(20), nullable=False)  # voice_ai, consultant
+    type = Column(String(20), nullable=False)  # visita, voice_ai, consultant
     contact_wa_id = Column(String(20), ForeignKey("contacts.wa_id"), nullable=False, index=True)
     contact_name = Column(String(255), nullable=True)
     phone = Column(String(30), nullable=False)
-    course = Column(String(255), nullable=True)
+    interest = Column(String(255), nullable=True)
     scheduled_date = Column(String(10), nullable=False)  # YYYY-MM-DD
-    scheduled_time = Column(String(5), nullable=False)    # HH:MM
-    scheduled_at = Column(DateTime, nullable=False)       # datetime completo
-    status = Column(String(20), default="pending")        # pending, completed, failed, cancelled
+    scheduled_time = Column(String(5), nullable=False)   # HH:MM
+    scheduled_at = Column(DateTime, nullable=False)      # datetime completo
+    status = Column(String(20), default="pending")       # pending, completed, failed, cancelled
     call_id = Column(Integer, ForeignKey("ai_calls.id"), nullable=True)
     channel_id = Column(Integer, ForeignKey("channels.id"), nullable=True)
+    property_id = Column(Integer, ForeignKey("properties.id"), nullable=True)
+    visit_address = Column(String(255), nullable=True)
     notes = Column(Text, nullable=True)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
     contact = relationship("Contact", backref="schedules")
     channel = relationship("Channel", backref="schedules")
+    property = relationship("Property", backref="schedules")
+
+
+# ==================== ATIVIDADES ====================
 
 class Activity(Base):
     __tablename__ = "activities"
