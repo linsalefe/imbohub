@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from dotenv import load_dotenv
+from app.pipeline_routes import router as pipeline_router
 from app.twilio_routes import router as twilio_router
 from datetime import datetime, timezone, timedelta
 from app.kanban_routes import router as kanban_router
@@ -134,6 +135,7 @@ app.include_router(voice_ai_router)
 app.include_router(evolution_router)
 app.include_router(schedule_router)
 app.include_router(export_router)
+app.include_router(pipeline_router)
 
 @app.get("/webhook")
 async def verify_webhook(
