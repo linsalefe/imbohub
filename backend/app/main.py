@@ -8,6 +8,7 @@ from sqlalchemy import select
 from dotenv import load_dotenv
 from app.pipeline_routes import router as pipeline_router
 from app.twilio_routes import router as twilio_router
+from app.upload_routes import router as upload_router
 from datetime import datetime, timezone, timedelta
 from app.kanban_routes import router as kanban_router
 from app.schedule_routes import router as schedule_router
@@ -137,6 +138,7 @@ app.include_router(evolution_router)
 app.include_router(schedule_router)
 app.include_router(export_router)
 app.include_router(pipeline_router)
+app.include_router(upload_router)
 app.include_router(property_router)
 
 @app.get("/webhook")
