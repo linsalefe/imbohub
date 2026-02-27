@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import api from '@/lib/api';
+import GoogleMap from '@/components/GoogleMap';
 
 interface Property {
   id: number;
@@ -856,6 +857,18 @@ export default function PropertiesPage() {
                         <span key={i} className="text-[11px] px-2 py-1 rounded-lg bg-blue-50 text-blue-600 font-medium">{f}</span>
                       ))}
                     </div>
+                  </div>
+                )}
+
+                {/* Map */}
+                {selectedProperty.latitude && selectedProperty.longitude && (
+                  <div>
+                    <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Localização</p>
+                    <GoogleMap
+                      latitude={selectedProperty.latitude}
+                      longitude={selectedProperty.longitude}
+                      height="250px"
+                    />
                   </div>
                 )}
 
