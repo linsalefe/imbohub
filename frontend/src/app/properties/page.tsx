@@ -1,10 +1,10 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   Building2, Plus, Search, RefreshCw, Loader2, X, Check,
   Bed, Bath, Car, Maximize, MapPin, DollarSign, Phone,
   Pencil, Trash2, Eye, ChevronDown, Home, Store, Trees, Landmark,
-  Users, Filter
+  Users, Filter, Camera, ChevronLeft, ChevronRight, Upload, ImagePlus
 } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import api from '@/lib/api';
@@ -40,6 +40,8 @@ interface Property {
   interests_count: number;
   created_at: string;
 }
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
 
 const typeLabels: Record<string, string> = {
   apartamento: 'Apartamento',
@@ -104,6 +106,11 @@ const defaultForm = {
   notes: '',
 };
 
+function PhotoUrl(path: string) {
+  if (path.startsWith('http')) return path;
+  return `${API_BASE}${path}`;
+}
+
 export default function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
@@ -116,6 +123,12 @@ export default function PropertiesPage() {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState(defaultForm);
+
+  // Photo states
+  const [uploading, setUploading] = useState(false);
+  const [editPhotos, setEditPhotos] = useState<string[]>([]);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadProperties = async () => {
     try {
@@ -146,6 +159,7 @@ export default function PropertiesPage() {
   const openCreate = () => {
     setForm(defaultForm);
     setEditingId(null);
+    setEditPhotos([]);
     setShowModal(true);
   };
 
@@ -176,6 +190,7 @@ export default function PropertiesPage() {
       notes: p.notes || '',
     });
     setEditingId(p.id);
+    setEditPhotos(p.photos || []);
     setShowModal(true);
   };
 
@@ -193,10 +208,17 @@ export default function PropertiesPage() {
     };
 
     try {
+      let propId = editingId;
       if (editingId) {
         await api.patch(`/properties/${editingId}`, payload);
       } else {
-        await api.post('/properties', payload);
+        const res = await api.post('/properties', payload);
+        propId = res.data.id;
+        setEditingId(propId);
+      }
+      // Upload pending files if any
+      if (fileInputRef.current?.files?.length && propId) {
+        await uploadPhotos(propId, fileInputRef.current.files);
       }
       setShowModal(false);
       setLoading(true);
@@ -205,6 +227,47 @@ export default function PropertiesPage() {
       alert(err.response?.data?.detail || 'Erro ao salvar');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const uploadPhotos = async (propertyId: number, files: FileList) => {
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      Array.from(files).forEach(f => formData.append('files', f));
+
+      const res = await api.post(`/properties/${propertyId}/photos`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setEditPhotos(res.data.photos);
+      return res.data;
+    } catch (err: any) {
+      alert(err.response?.data?.detail || 'Erro no upload');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    if (editingId) {
+      // Imóvel já existe, upload direto
+      await uploadPhotos(editingId, files);
+      loadProperties();
+    }
+    // Se está criando, o upload será feito no handleSave
+  };
+
+  const handleDeletePhoto = async (photoUrl: string) => {
+    if (!editingId) return;
+    try {
+      await api.delete(`/properties/${editingId}/photos`, { params: { photo_url: photoUrl } });
+      setEditPhotos(prev => prev.filter(p => p !== photoUrl));
+      loadProperties();
+    } catch (err: any) {
+      alert(err.response?.data?.detail || 'Erro ao remover foto');
     }
   };
 
@@ -341,11 +404,18 @@ export default function PropertiesPage() {
                     className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md transition-all group"
                   >
                     {/* Photo/Placeholder */}
-                    <div className="h-40 bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center relative">
+                    <div className="h-44 bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center relative overflow-hidden">
                       {p.photos && p.photos.length > 0 ? (
-                        <img src={p.photos[0]} alt={p.title} className="w-full h-full object-cover" />
+                        <img src={PhotoUrl(p.photos[0])} alt={p.title} className="w-full h-full object-cover" />
                       ) : (
                         <TypeIcon className="w-12 h-12 text-gray-300" />
+                      )}
+
+                      {/* Photo count */}
+                      {p.photos && p.photos.length > 1 && (
+                        <span className="absolute bottom-3 left-3 text-[10px] font-semibold px-2 py-1 rounded-lg bg-black/50 text-white flex items-center gap-1">
+                          <Camera className="w-3 h-3" /> {p.photos.length}
+                        </span>
                       )}
 
                       {/* Status badge */}
@@ -364,7 +434,7 @@ export default function PropertiesPage() {
                       {/* Actions on hover */}
                       <div className="absolute bottom-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
-                          onClick={() => setSelectedProperty(p)}
+                          onClick={() => { setSelectedProperty(p); setGalleryIndex(0); }}
                           className="p-2 rounded-lg bg-white/90 text-gray-700 hover:bg-white shadow-sm"
                         >
                           <Eye className="w-3.5 h-3.5" />
@@ -452,6 +522,47 @@ export default function PropertiesPage() {
               </div>
 
               <div className="p-6 space-y-5">
+
+                {/* === FOTOS === */}
+                <div>
+                  <label className="text-[12px] font-semibold text-gray-500 uppercase tracking-wider mb-2 block">Fotos</label>
+                  <div className="flex flex-wrap gap-2">
+                    {editPhotos.map((photo, idx) => (
+                      <div key={idx} className="relative w-24 h-24 rounded-xl overflow-hidden border border-gray-200 group">
+                        <img src={PhotoUrl(photo)} alt="" className="w-full h-full object-cover" />
+                        <button
+                          onClick={() => handleDeletePhoto(photo)}
+                          className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+
+                    <label className="w-24 h-24 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/50 transition-all">
+                      {uploading ? (
+                        <Loader2 className="w-5 h-5 animate-spin text-blue-400" />
+                      ) : (
+                        <>
+                          <ImagePlus className="w-5 h-5 text-gray-400 mb-1" />
+                          <span className="text-[10px] text-gray-400">Adicionar</span>
+                        </>
+                      )}
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handlePhotoUpload}
+                      />
+                    </label>
+                  </div>
+                  {!editingId && (
+                    <p className="text-[10px] text-gray-400 mt-1">As fotos serão enviadas após salvar o imóvel</p>
+                  )}
+                </div>
+
                 {/* Título */}
                 <div>
                   <label className="text-[12px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 block">Título do anúncio</label>
@@ -637,6 +748,53 @@ export default function PropertiesPage() {
         {selectedProperty && (
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={() => setSelectedProperty(null)}>
             <div className="bg-white rounded-2xl w-[calc(100vw-2rem)] lg:w-[600px] max-h-[85vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
+              
+              {/* Photo Gallery */}
+              {selectedProperty.photos.length > 0 && (
+                <div className="relative h-64 bg-gray-100">
+                  <img
+                    src={PhotoUrl(selectedProperty.photos[galleryIndex])}
+                    alt={selectedProperty.title}
+                    className="w-full h-full object-cover"
+                  />
+                  {selectedProperty.photos.length > 1 && (
+                    <>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setGalleryIndex(i => i > 0 ? i - 1 : selectedProperty.photos.length - 1); }}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/40 text-white hover:bg-black/60 transition-all"
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setGalleryIndex(i => i < selectedProperty.photos.length - 1 ? i + 1 : 0); }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/40 text-white hover:bg-black/60 transition-all"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                      <span className="absolute bottom-3 right-3 text-[11px] font-medium px-2 py-1 rounded-lg bg-black/40 text-white">
+                        {galleryIndex + 1} / {selectedProperty.photos.length}
+                      </span>
+                    </>
+                  )}
+                  {/* Thumbnails */}
+                  {selectedProperty.photos.length > 1 && (
+                    <div className="absolute bottom-3 left-3 flex gap-1.5">
+                      {selectedProperty.photos.slice(0, 6).map((photo, idx) => (
+                        <button
+                          key={idx}
+                          onClick={(e) => { e.stopPropagation(); setGalleryIndex(idx); }}
+                          className={`w-10 h-10 rounded-lg overflow-hidden border-2 transition-all ${
+                            idx === galleryIndex ? 'border-white' : 'border-transparent opacity-70'
+                          }`}
+                        >
+                          <img src={PhotoUrl(photo)} alt="" className="w-full h-full object-cover" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="p-6 space-y-5">
                 {/* Header */}
                 <div className="flex items-start justify-between">
@@ -656,6 +814,14 @@ export default function PropertiesPage() {
                   {formatCurrency(selectedProperty.price)}
                   {selectedProperty.transaction_type === 'aluguel' && <span className="text-[13px] text-gray-400 font-normal">/mês</span>}
                 </p>
+
+                {/* Costs */}
+                {(selectedProperty.condo_fee || selectedProperty.iptu) && (
+                  <div className="flex gap-4 text-[12px] text-gray-500">
+                    {selectedProperty.condo_fee && <span>Condomínio: {formatCurrency(selectedProperty.condo_fee)}</span>}
+                    {selectedProperty.iptu && <span>IPTU: {formatCurrency(selectedProperty.iptu)}</span>}
+                  </div>
+                )}
 
                 {/* Specs grid */}
                 <div className="grid grid-cols-4 gap-3">
