@@ -70,13 +70,13 @@ const statusLabels: Record<string, string> = {
 };
 
 const statusColors: Record<string, string> = {
-  disponivel: '#10b981', reservado: '#f59e0b',
-  vendido: 'var(--primary)', alugado: '#7C6B5C', inativo: '#94a3b8',
+  disponivel: '#5D7A3A', reservado: '#C8910A',
+  vendido: 'var(--primary)', alugado: '#7C6B5C', inativo: '#94867A',
 };
 
 const statusColorsHex: Record<string, string> = {
-  disponivel: '#10b981', reservado: '#f59e0b',
-  vendido: '#B85C38', alugado: '#7C6B5C', inativo: '#94a3b8',
+  disponivel: '#5D7A3A', reservado: '#C8910A',
+  vendido: '#B85C38', alugado: '#7C6B5C', inativo: '#94867A',
 };
 
 function getGreeting(): string {
@@ -234,7 +234,7 @@ export default function DashboardPage() {
           {[
             { label: 'Total de Leads', value: stats.total_contacts, icon: Users, iconBg: '#B85C38', iconBgLight: 'var(--primary-light)' },
             { label: 'Novos Hoje', value: stats.new_today, icon: UserPlus, iconBg: '#5D7A3A', iconBgLight: 'var(--success-light)' },
-            { label: 'Imóveis Ativos', value: propStats?.by_status?.disponivel || 0, icon: Building2, iconBg: '#10b981', iconBgLight: 'rgba(16,185,129,0.1)' },
+            { label: 'Imóveis Ativos', value: propStats?.by_status?.disponivel || 0, icon: Building2, iconBg: '#7C6B5C', iconBgLight: 'rgba(124,107,92,0.1)' },
             { label: 'Mensagens Hoje', value: stats.messages_today, icon: MessageSquare, iconBg: '#C8910A', iconBgLight: 'var(--warning-light)' },
           ].map((item) => {
             const Icon = item.icon;
@@ -307,8 +307,8 @@ export default function DashboardPage() {
                 <h2 className="text-[15px] font-semibold text-[var(--text)]">Imóveis</h2>
                 <p className="text-[12px] text-gray-400 mt-0.5">{propStats?.total || 0} cadastrados</p>
               </div>
-              <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(16,185,129,0.1)' }}>
-                <Building2 className="w-4 h-4 text-emerald-600" />
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(124,107,92,0.1)' }}>
+                <Building2 className="w-4 h-4" style={{ color: '#7C6B5C' }} />
               </div>
             </div>
 
@@ -374,7 +374,7 @@ export default function DashboardPage() {
                       {Object.entries(propStats.avg_price).map(([type, avg]) => (
                         <div key={type} className="flex items-center justify-between">
                           <span className="text-[11px] text-gray-500">{type === 'venda' ? 'Venda' : 'Aluguel'}</span>
-                          <span className="text-[12px] font-bold text-emerald-600">{formatCurrency(avg)}</span>
+                          <span className="text-[12px] font-bold" style={{ color: '#5D7A3A' }}>{formatCurrency(avg)}</span>
                         </div>
                       ))}
                     </div>
@@ -478,7 +478,7 @@ export default function DashboardPage() {
                   {advanced.unassigned_leads > 0 && (
                     <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
                       <span className="text-[12px] text-gray-400">Sem atribuição</span>
-                      <span className="text-[11px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">{advanced.unassigned_leads}</span>
+                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-md" style={{ color: '#C8910A', backgroundColor: 'var(--warning-light)' }}>{advanced.unassigned_leads}</span>
                     </div>
                   )}
                 </div>
@@ -509,7 +509,7 @@ export default function DashboardPage() {
                     <p className="text-lg font-bold tabular-nums" style={{ color: item.iconColor }}>{item.value}</p>
                     {(item as any).extra && (
                       <span className={`text-[10px] font-semibold px-1 py-0.5 rounded ${
-                        String((item as any).extra).startsWith('+') ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'
+                        String((item as any).extra).startsWith('+') ? 'text-[#5D7A3A] bg-[rgba(93,122,58,0.1)]' : 'text-[#A63D3D] bg-[rgba(166,61,61,0.1)]'
                       }`}>{(item as any).extra}</span>
                     )}
                   </div>
