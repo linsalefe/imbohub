@@ -881,7 +881,7 @@ export default function PropertiesPage() {
                         lat: p.latitude || 0,
                         lng: p.longitude || 0,
                         title: `${p.name} (${p.distance_meters}m)`,
-                        color: {
+                        color: ({
                           escola: '#f59e0b',
                           hospital: '#ef4444',
                           supermercado: '#10b981',
@@ -889,7 +889,7 @@ export default function PropertiesPage() {
                           parque: '#22c55e',
                           banco: '#64748b',
                           restaurante: '#f97316',
-                        }[p.category] || '#6366f1',
+                        } as Record<string, string>)[p.category as string] || '#6366f1',
                       })).filter((m: any) => m.lat && m.lng) || []}
                     />
                   </div>
@@ -903,7 +903,7 @@ export default function PropertiesPage() {
                       {(selectedProperty as any).nearby_places.map((p: any) => (
                         <div key={p.id} className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-gray-50">
                           <span className="text-[14px]">
-                            {{ escola: '🏫', hospital: '🏥', supermercado: '🛒', metro: '🚇', parque: '🌳', banco: '🏦', restaurante: '🍽️' }[p.category as string] || '📍'}
+                            {({ escola: '🏫', hospital: '🏥', supermercado: '🛒', metro: '🚇', parque: '🌳', banco: '🏦', restaurante: '🍽️' } as Record<string, string>)[p.category as string] || '📍'}
                           </span>
                           <div className="flex-1 min-w-0">
                             <p className="text-[12px] font-medium text-gray-700 truncate">{p.name}</p>
