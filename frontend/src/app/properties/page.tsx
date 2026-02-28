@@ -39,6 +39,7 @@ interface Property {
   features: string[];
   notes: string | null;
   interests_count: number;
+  nearby_places: { id: number; category: string; name: string; address: string; distance_meters: number; duration_walking: string; latitude: number; longitude: number; rating: number | null }[];
   created_at: string;
 }
 
@@ -435,7 +436,15 @@ export default function PropertiesPage() {
                       {/* Actions on hover */}
                       <div className="absolute bottom-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
-                          onClick={() => { setSelectedProperty(p); setGalleryIndex(0); }}
+                          onClick={async () => { 
+                            setGalleryIndex(0); 
+                            try { 
+                              const res = await api.get(`/properties/${p.id}`); 
+                              setSelectedProperty(res.data); 
+                            } catch { 
+                              setSelectedProperty(p); 
+                            } 
+                          }}
                           className="p-2 rounded-lg bg-white/90 text-gray-700 hover:bg-white shadow-sm"
                         >
                           <Eye className="w-3.5 h-3.5" />
@@ -860,7 +869,7 @@ export default function PropertiesPage() {
                   </div>
                 )}
 
-                {/* Map */}
+                {/* Map + Nearby Places */}
                 {selectedProperty.latitude && selectedProperty.longitude && (
                   <div>
                     <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Localização</p>
@@ -868,7 +877,44 @@ export default function PropertiesPage() {
                       latitude={selectedProperty.latitude}
                       longitude={selectedProperty.longitude}
                       height="250px"
+                      markers={(selectedProperty as any).nearby_places?.map((p: any) => ({
+                        lat: p.latitude || 0,
+                        lng: p.longitude || 0,
+                        title: `${p.name} (${p.distance_meters}m)`,
+                        color: {
+                          escola: '#f59e0b',
+                          hospital: '#ef4444',
+                          supermercado: '#10b981',
+                          metro: '#6366f1',
+                          parque: '#22c55e',
+                          banco: '#64748b',
+                          restaurante: '#f97316',
+                        }[p.category] || '#6366f1',
+                      })).filter((m: any) => m.lat && m.lng) || []}
                     />
+                  </div>
+                )}
+
+                {/* Nearby Places List */}
+                {(selectedProperty as any).nearby_places?.length > 0 && (
+                  <div>
+                    <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">O que tem por perto</p>
+                    <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                      {(selectedProperty as any).nearby_places.map((p: any) => (
+                        <div key={p.id} className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-gray-50">
+                          <span className="text-[14px]">
+                            {{ escola: '🏫', hospital: '🏥', supermercado: '🛒', metro: '🚇', parque: '🌳', banco: '🏦', restaurante: '🍽️' }[p.category as string] || '📍'}
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[12px] font-medium text-gray-700 truncate">{p.name}</p>
+                            <p className="text-[10px] text-gray-400">{p.category} · {p.distance_meters}m · {p.duration_walking}</p>
+                          </div>
+                          {p.rating && (
+                            <span className="text-[11px] font-medium text-amber-500">⭐ {p.rating}</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
 
