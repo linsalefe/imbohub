@@ -229,7 +229,7 @@ export default function ChannelsPage() {
           <button
             onClick={() => { setShowNewModal(true); setFormName(''); }}
             disabled={channels.filter(c => c.provider === 'evolution').length >= 2}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#6366f1] text-white text-[13px] font-semibold hover:bg-[#5558e6] transition-all shadow-sm hover:shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--primary)] text-white text-[13px] font-semibold hover:bg-[var(--primary-hover)] transition-all shadow-sm hover:shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus className="w-4 h-4" />
             Novo Canal
@@ -239,7 +239,7 @@ export default function ChannelsPage() {
         {/* Channels List */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-6 h-6 text-[#6366f1] animate-spin" />
+            <Loader2 className="w-6 h-6 text-[var(--primary)] animate-spin" />
           </div>
         ) : channels.length === 0 ? (
           <div className="bg-white rounded-2xl border border-gray-100 p-16 text-center">
@@ -250,7 +250,7 @@ export default function ChannelsPage() {
             <p className="text-sm text-gray-400 mb-6">Conecte seu primeiro WhatsApp para começar</p>
             <button
               onClick={() => setShowNewModal(true)}
-              className="px-6 py-2.5 rounded-xl bg-[#6366f1] text-white text-[13px] font-medium hover:bg-[#5558e6] transition-all"
+              className="px-6 py-2.5 rounded-xl bg-[var(--primary)] text-white text-[13px] font-medium hover:bg-[var(--primary-hover)] transition-all"
             >
               Conectar WhatsApp
             </button>
@@ -263,7 +263,7 @@ export default function ChannelsPage() {
                   <div className="flex items-center gap-4">
                     <div
                       className="w-12 h-12 rounded-xl flex items-center justify-center"
-                      style={{ backgroundColor: `${typeColors[ch.type] || '#6366f1'}15` }}
+                      style={{ backgroundColor: `${typeColors[ch.type] || 'var(--primary)'}15` }}
                     >
                       <svg viewBox="0 0 32 32" className="w-7 h-7">
                         <circle cx="16" cy="16" r="16" fill="#25D366"/>
@@ -313,7 +313,7 @@ export default function ChannelsPage() {
                     {!ch.is_connected && ch.provider === 'evolution' && ch.instance_name && (
                       <button
                         onClick={() => reconnectChannel(ch)}
-                        className="p-2 rounded-lg text-gray-400 hover:text-indigo-500 hover:bg-indigo-50 transition-all"
+                        className="p-2 rounded-lg text-gray-400 hover:text-[var(--primary)] hover:bg-[var(--primary-light)] transition-all"
                         title="Reconectar" aria-label="Reconectar"
                       >
                         <QrCode className="w-4 h-4" />
@@ -376,7 +376,7 @@ export default function ChannelsPage() {
                   <input
                     value={formName}
                     onChange={e => setFormName(e.target.value)}
-                    className="mt-1.5 w-full px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                    className="mt-1.5 w-full px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]"
                     placeholder="Ex: WhatsApp Comercial"
                     autoFocus
                   />
@@ -424,7 +424,7 @@ export default function ChannelsPage() {
                 <div className="flex flex-col items-center">
                   {qrStatus === 'loading' && (
                     <div className="w-64 h-64 flex items-center justify-center bg-gray-50 rounded-2xl">
-                      <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+                      <Loader2 className="w-8 h-8 text-[var(--primary)] animate-spin" />
                     </div>
                   )}
 

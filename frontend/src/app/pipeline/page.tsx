@@ -66,7 +66,7 @@ export default function PipelinePage() {
   const [newPipelineName, setNewPipelineName] = useState('');
   const [showNewPipeline, setShowNewPipeline] = useState(false);
 
-  const colors = ['#6366f1', '#f59e0b', '#8b5cf6', '#06b6d4', '#f97316', '#10b981', '#ef4444', '#ec4899', '#14b8a6', '#64748b'];
+  const colors = ['#B85C38', '#f59e0b', '#7C6B5C', '#06b6d4', '#f97316', '#10b981', '#ef4444', '#ec4899', '#14b8a6', '#64748b'];
 
   // === Load Pipelines ===
   const loadPipelines = async () => {
@@ -267,17 +267,17 @@ export default function PipelinePage() {
 
   return (
     <AppLayout>
-      <div className="flex-1 bg-[#f8f9fb] overflow-hidden flex flex-col">
+      <div className="flex-1 bg-[var(--bg)] overflow-hidden flex flex-col">
 
         {/* Header */}
         <div className="px-4 lg:px-6 py-4 border-b border-gray-200 bg-white flex-shrink-0">
           <div className="flex items-start lg:items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-md flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--primary)] to-[var(--primary-hover)] flex items-center justify-center shadow-md flex-shrink-0">
                 <Users className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-lg lg:text-xl font-bold text-[#27273D]">Pipeline</h1>
+                <h1 className="text-lg lg:text-xl font-bold text-[var(--text)]">Pipeline</h1>
                 <p className="text-[12px] text-gray-400">
                   {activePipeline?.name || 'Carregando...'} · {totalLeads} leads
                 </p>
@@ -289,7 +289,7 @@ export default function PipelinePage() {
               <div className="relative">
                 <button
                   onClick={() => setShowPipelineMenu(!showPipelineMenu)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-white text-[13px] text-gray-700 hover:border-indigo-200 transition-all"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-white text-[13px] text-gray-700 hover:border-[var(--primary)/20] transition-all"
                 >
                   <span className="max-w-[120px] truncate">{activePipeline?.name || 'Selecionar'}</span>
                   <ChevronDown className="w-4 h-4 text-gray-400" />
@@ -302,7 +302,7 @@ export default function PipelinePage() {
                         key={p.id}
                         onClick={() => { setActivePipelineId(p.id); setShowPipelineMenu(false); }}
                         className={`w-full text-left px-4 py-2.5 text-[13px] hover:bg-gray-50 transition-colors ${
-                          p.id === activePipelineId ? 'text-indigo-600 font-medium bg-indigo-50' : 'text-gray-700'
+                          p.id === activePipelineId ? 'text-[var(--primary)] font-medium bg-[var(--primary-light)]' : 'text-gray-700'
                         }`}
                       >
                         {p.name}
@@ -316,11 +316,11 @@ export default function PipelinePage() {
                             value={newPipelineName}
                             onChange={e => setNewPipelineName(e.target.value)}
                             placeholder="Nome do funil..."
-                            className="flex-1 px-2 py-1.5 rounded-lg border border-gray-200 text-[12px] focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                            className="flex-1 px-2 py-1.5 rounded-lg border border-gray-200 text-[12px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]"
                             onKeyDown={e => e.key === 'Enter' && createPipeline()}
                             autoFocus
                           />
-                          <button onClick={createPipeline} className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg">
+                          <button onClick={createPipeline} className="p-1.5 text-[var(--primary)] hover:bg-[var(--primary-light)] rounded-lg">
                             <Check className="w-4 h-4" />
                           </button>
                           <button onClick={() => setShowNewPipeline(false)} className="p-1.5 text-gray-400 hover:bg-gray-100 rounded-lg">
@@ -330,7 +330,7 @@ export default function PipelinePage() {
                       ) : (
                         <button
                           onClick={() => setShowNewPipeline(true)}
-                          className="w-full text-left px-4 py-2.5 text-[13px] text-indigo-600 hover:bg-indigo-50 transition-colors flex items-center gap-2"
+                          className="w-full text-left px-4 py-2.5 text-[13px] text-[var(--primary)] hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2"
                         >
                           <Plus className="w-4 h-4" />
                           Novo funil
@@ -347,7 +347,7 @@ export default function PipelinePage() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Buscar lead..."
-                  className="pl-9 pr-4 py-2 rounded-xl border border-gray-200 text-[13px] bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-200 w-40 lg:w-52"
+                  className="pl-9 pr-4 py-2 rounded-xl border border-gray-200 text-[13px] bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] w-40 lg:w-52"
                 />
               </div>
 
@@ -355,8 +355,8 @@ export default function PipelinePage() {
                 onClick={() => setShowSettings(!showSettings)}
                 className={`p-2.5 rounded-xl border transition-all ${
                   showSettings
-                    ? 'border-indigo-300 bg-indigo-50 text-indigo-600'
-                    : 'border-gray-200 bg-white text-gray-500 hover:text-indigo-600 hover:border-indigo-200'
+                    ? 'border-[var(--primary)/30] bg-[var(--primary-light)] text-[var(--primary)]'
+                    : 'border-gray-200 bg-white text-gray-500 hover:text-[var(--primary)] hover:border-[var(--primary)/20]'
                 }`}
               >
                 <Settings className="w-4 h-4" />
@@ -364,7 +364,7 @@ export default function PipelinePage() {
 
               <button
                 onClick={() => { setLoading(true); if (activePipelineId) loadPipelineLeads(activePipelineId); }}
-                className="p-2.5 rounded-xl border border-gray-200 bg-white text-gray-500 hover:text-indigo-600 hover:border-indigo-200 transition-all"
+                className="p-2.5 rounded-xl border border-gray-200 bg-white text-gray-500 hover:text-[var(--primary)] hover:border-[var(--primary)/20] transition-all"
               >
                 <RefreshCw className="w-4 h-4" />
               </button>
@@ -402,7 +402,7 @@ export default function PipelinePage() {
                       <input
                         value={editStageName}
                         onChange={e => setEditStageName(e.target.value)}
-                        className="w-28 px-2 py-1 rounded border border-gray-200 text-[12px] focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                        className="w-28 px-2 py-1 rounded border border-gray-200 text-[12px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]"
                         autoFocus
                       />
                       <select
@@ -427,7 +427,7 @@ export default function PipelinePage() {
                       <span className="text-[12px] font-medium text-gray-700">{stage.name}</span>
                       <button
                         onClick={() => { setEditingStage(stage.id); setEditStageName(stage.name); setEditStageColor(stage.color); }}
-                        className="p-1 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded ml-1"
+                        className="p-1 text-gray-400 hover:text-[var(--primary)] hover:bg-[var(--primary-light)] rounded ml-1"
                       >
                         <Pencil className="w-3 h-3" />
                       </button>
@@ -448,11 +448,11 @@ export default function PipelinePage() {
                   value={newStageName}
                   onChange={e => setNewStageName(e.target.value)}
                   placeholder="Novo estágio..."
-                  className="w-32 px-3 py-2 rounded-xl border border-dashed border-gray-300 text-[12px] bg-white focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300"
+                  className="w-32 px-3 py-2 rounded-xl border border-dashed border-gray-300 text-[12px] bg-white focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] focus:border-[var(--primary)/30]"
                   onKeyDown={e => e.key === 'Enter' && addStage()}
                 />
                 {newStageName && (
-                  <button onClick={addStage} className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl">
+                  <button onClick={addStage} className="p-2 text-[var(--primary)] hover:bg-[var(--primary-light)] rounded-xl">
                     <Plus className="w-4 h-4" />
                   </button>
                 )}
@@ -465,7 +465,7 @@ export default function PipelinePage() {
         <div className="flex-1 overflow-x-auto overflow-y-hidden p-4 lg:p-6">
           {loading ? (
             <div className="flex items-center justify-center h-full">
-              <Loader2 className="w-8 h-8 animate-spin text-indigo-400" />
+              <Loader2 className="w-8 h-8 animate-spin text-[var(--primary)]" />
             </div>
           ) : pipelineLeads ? (
             <div className="flex gap-4 h-full" style={{ minWidth: `${pipelineLeads.stages.length * 300}px` }}>
@@ -477,7 +477,7 @@ export default function PipelinePage() {
                   <div
                     key={stage.id}
                     className={`flex-1 min-w-[270px] max-w-[320px] flex flex-col rounded-2xl transition-all ${
-                      isDropping ? 'ring-2 ring-indigo-300 bg-indigo-50/50' : 'bg-gray-50/80'
+                      isDropping ? 'ring-2 ring-[var(--primary)/30] bg-[var(--primary-light)]/50' : 'bg-gray-50/80'
                     }`}
                     onDragOver={(e) => handleDragOver(e, stage.id)}
                     onDragLeave={handleDragLeave}
@@ -580,8 +580,8 @@ export default function PipelinePage() {
                 {/* Header */}
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
-                      <span className="text-lg font-bold text-indigo-600">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--primary-light)] to-[var(--primary-light)] flex items-center justify-center">
+                      <span className="text-lg font-bold text-[var(--primary)]">
                         {(selectedLead.name || '?')[0].toUpperCase()}
                       </span>
                     </div>
@@ -661,7 +661,7 @@ export default function PipelinePage() {
                 <div className="flex gap-2">
                   <a
                     href="/conversations"
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#0f1b2d] text-white text-[13px] font-medium hover:bg-[#1a2d42] transition-all"
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[var(--sidebar)] text-white text-[13px] font-medium hover:bg-[var(--sidebar-hover)] transition-all"
                   >
                     <MessageCircle className="w-4 h-4" />
                     Abrir Conversa
@@ -683,4 +683,3 @@ export default function PipelinePage() {
     </AppLayout>
   );
 }
-

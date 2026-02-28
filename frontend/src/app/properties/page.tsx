@@ -70,8 +70,8 @@ const transactionLabels: Record<string, string> = {
 const statusLabels: Record<string, { label: string; color: string; bg: string }> = {
   disponivel: { label: 'Disponível', color: '#10b981', bg: 'bg-emerald-50' },
   reservado: { label: 'Reservado', color: '#f59e0b', bg: 'bg-amber-50' },
-  vendido: { label: 'Vendido', color: '#6366f1', bg: 'bg-indigo-50' },
-  alugado: { label: 'Alugado', color: '#8b5cf6', bg: 'bg-purple-50' },
+  vendido: { label: 'Vendido', color: 'var(--primary)', bg: 'bg-[var(--primary-light)]' },
+  alugado: { label: 'Alugado', color: '#7C6B5C', bg: 'bg-[#7C6B5C/10]' },
   inativo: { label: 'Inativo', color: '#64748b', bg: 'bg-gray-50' },
 };
 
@@ -302,17 +302,17 @@ export default function PropertiesPage() {
 
   return (
     <AppLayout>
-      <div className="flex-1 bg-[#f8f9fb] overflow-hidden flex flex-col">
+      <div className="flex-1 bg-[var(--bg)] overflow-hidden flex flex-col">
 
         {/* Header */}
         <div className="px-4 lg:px-6 py-4 border-b border-gray-200 bg-white flex-shrink-0">
           <div className="flex items-start lg:items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-md flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--primary)] to-[var(--primary-hover)] flex items-center justify-center shadow-md flex-shrink-0">
                 <Building2 className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-lg lg:text-xl font-bold text-[#27273D]">Imóveis</h1>
+                <h1 className="text-lg lg:text-xl font-bold text-[var(--text)]">Imóveis</h1>
                 <p className="text-[12px] text-gray-400">
                   {properties.length} imóveis cadastrados
                 </p>
@@ -326,13 +326,13 @@ export default function PropertiesPage() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Buscar imóvel..."
-                  className="pl-9 pr-4 py-2 rounded-xl border border-gray-200 text-[13px] bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-200 w-40 lg:w-52"
+                  className="pl-9 pr-4 py-2 rounded-xl border border-gray-200 text-[13px] bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] w-40 lg:w-52"
                 />
               </form>
 
               <button
                 onClick={openCreate}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-600 text-white text-[13px] font-medium hover:opacity-90 transition-all shadow-sm"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-[var(--primary-hover)] text-white text-[13px] font-medium hover:opacity-90 transition-all shadow-sm"
               >
                 <Plus className="w-4 h-4" />
                 <span className="hidden lg:inline">Novo Imóvel</span>
@@ -340,7 +340,7 @@ export default function PropertiesPage() {
 
               <button
                 onClick={() => { setLoading(true); loadProperties(); }}
-                className="p-2.5 rounded-xl border border-gray-200 bg-white text-gray-500 hover:text-blue-600 hover:border-blue-200 transition-all"
+                className="p-2.5 rounded-xl border border-gray-200 bg-white text-gray-500 hover:text-[var(--primary)] hover:border-[var(--primary)/20] transition-all"
               >
                 <RefreshCw className="w-4 h-4" />
               </button>
@@ -352,7 +352,7 @@ export default function PropertiesPage() {
             <select
               value={filterType}
               onChange={e => { setFilterType(e.target.value); }}
-              className="px-3 py-1.5 rounded-lg border border-gray-200 text-[12px] text-gray-600 bg-white focus:outline-none focus:ring-2 focus:ring-blue-200"
+              className="px-3 py-1.5 rounded-lg border border-gray-200 text-[12px] text-gray-600 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]"
             >
               <option value="">Todos os tipos</option>
               {Object.entries(typeLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
@@ -361,7 +361,7 @@ export default function PropertiesPage() {
             <select
               value={filterTransaction}
               onChange={e => { setFilterTransaction(e.target.value); }}
-              className="px-3 py-1.5 rounded-lg border border-gray-200 text-[12px] text-gray-600 bg-white focus:outline-none focus:ring-2 focus:ring-blue-200"
+              className="px-3 py-1.5 rounded-lg border border-gray-200 text-[12px] text-gray-600 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]"
             >
               <option value="">Venda e Aluguel</option>
               <option value="venda">Venda</option>
@@ -371,7 +371,7 @@ export default function PropertiesPage() {
             <select
               value={filterStatus}
               onChange={e => { setFilterStatus(e.target.value); }}
-              className="px-3 py-1.5 rounded-lg border border-gray-200 text-[12px] text-gray-600 bg-white focus:outline-none focus:ring-2 focus:ring-blue-200"
+              className="px-3 py-1.5 rounded-lg border border-gray-200 text-[12px] text-gray-600 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]"
             >
               <option value="">Todos os status</option>
               {Object.entries(statusLabels).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
@@ -383,14 +383,14 @@ export default function PropertiesPage() {
         <div className="flex-1 overflow-y-auto p-4 lg:p-6">
           {loading ? (
             <div className="flex items-center justify-center h-64">
-              <Loader2 className="w-8 h-8 animate-spin text-blue-400" />
+              <Loader2 className="w-8 h-8 animate-spin text-[var(--primary)]" />
             </div>
           ) : properties.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-64 text-center">
               <Building2 className="w-16 h-16 text-gray-200 mb-4" />
               <h3 className="text-lg font-semibold text-gray-700 mb-1">Nenhum imóvel cadastrado</h3>
               <p className="text-[13px] text-gray-400 mb-4">Comece cadastrando seu primeiro imóvel</p>
-              <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-500 text-white text-[13px] font-medium hover:bg-blue-600 transition-all">
+              <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--primary)] text-white text-[13px] font-medium hover:bg-[var(--primary-hover)] transition-all">
                 <Plus className="w-4 h-4" />
                 Cadastrar imóvel
               </button>
@@ -478,7 +478,7 @@ export default function PropertiesPage() {
                         </p>
                       )}
 
-                      <p className="text-[18px] font-bold text-blue-600 mb-3">
+                      <p className="text-[18px] font-bold text-[var(--primary)] mb-3">
                         {formatCurrency(p.price)}
                         {p.transaction_type === 'aluguel' && <span className="text-[11px] text-gray-400 font-normal">/mês</span>}
                       </p>
@@ -506,7 +506,7 @@ export default function PropertiesPage() {
                           </span>
                         )}
                         {p.interests_count > 0 && (
-                          <span className="flex items-center gap-1 ml-auto text-blue-500 font-medium">
+                          <span className="flex items-center gap-1 ml-auto text-[var(--primary)] font-medium">
                             <Users className="w-3.5 h-3.5" /> {p.interests_count}
                           </span>
                         )}
@@ -550,9 +550,9 @@ export default function PropertiesPage() {
                       </div>
                     ))}
 
-                    <label className="w-24 h-24 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/50 transition-all">
+                    <label className="w-24 h-24 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-[var(--primary)] hover:bg-[var(--primary-light)] transition-all">
                       {uploading ? (
-                        <Loader2 className="w-5 h-5 animate-spin text-blue-400" />
+                        <Loader2 className="w-5 h-5 animate-spin text-[var(--primary)]" />
                       ) : (
                         <>
                           <ImagePlus className="w-5 h-5 text-gray-400 mb-1" />
@@ -581,7 +581,7 @@ export default function PropertiesPage() {
                     value={form.title}
                     onChange={e => setForm({ ...form, title: e.target.value })}
                     placeholder="Ex: Apartamento 3 quartos na Vila Mariana"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]"
                   />
                 </div>
 
@@ -592,7 +592,7 @@ export default function PropertiesPage() {
                     <select
                       value={form.type}
                       onChange={e => setForm({ ...form, type: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200"
+                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]"
                     >
                       {Object.entries(typeLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                     </select>
@@ -602,7 +602,7 @@ export default function PropertiesPage() {
                     <select
                       value={form.transaction_type}
                       onChange={e => setForm({ ...form, transaction_type: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200"
+                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]"
                     >
                       <option value="venda">Venda</option>
                       <option value="aluguel">Aluguel</option>
@@ -614,7 +614,7 @@ export default function PropertiesPage() {
                     <select
                       value={form.status}
                       onChange={e => setForm({ ...form, status: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200"
+                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]"
                     >
                       {Object.entries(statusLabels).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
                     </select>
@@ -630,7 +630,7 @@ export default function PropertiesPage() {
                       value={form.price}
                       onChange={e => setForm({ ...form, price: e.target.value })}
                       placeholder="350000"
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200"
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]"
                     />
                   </div>
                   <div>
@@ -640,7 +640,7 @@ export default function PropertiesPage() {
                       value={form.condo_fee}
                       onChange={e => setForm({ ...form, condo_fee: e.target.value })}
                       placeholder="500"
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200"
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]"
                     />
                   </div>
                   <div>
@@ -650,7 +650,7 @@ export default function PropertiesPage() {
                       value={form.iptu}
                       onChange={e => setForm({ ...form, iptu: e.target.value })}
                       placeholder="200"
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200"
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]"
                     />
                   </div>
                 </div>
@@ -671,7 +671,7 @@ export default function PropertiesPage() {
                         type="number"
                         value={(form as any)[f.key]}
                         onChange={e => setForm({ ...form, [f.key]: f.key.includes('area') ? e.target.value : parseInt(e.target.value) || 0 })}
-                        className="w-full px-3 py-2 rounded-xl border border-gray-200 text-[13px] text-center focus:outline-none focus:ring-2 focus:ring-blue-200"
+                        className="w-full px-3 py-2 rounded-xl border border-gray-200 text-[13px] text-center focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]"
                       />
                     </div>
                   ))}
@@ -681,13 +681,13 @@ export default function PropertiesPage() {
                 <div>
                   <label className="text-[12px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 block">Endereço</label>
                   <div className="grid grid-cols-6 gap-2">
-                    <input value={form.address_street} onChange={e => setForm({ ...form, address_street: e.target.value })} placeholder="Rua" className="col-span-4 px-3 py-2 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                    <input value={form.address_number} onChange={e => setForm({ ...form, address_number: e.target.value })} placeholder="Nº" className="col-span-1 px-3 py-2 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                    <input value={form.address_complement} onChange={e => setForm({ ...form, address_complement: e.target.value })} placeholder="Comp." className="col-span-1 px-3 py-2 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                    <input value={form.address_neighborhood} onChange={e => setForm({ ...form, address_neighborhood: e.target.value })} placeholder="Bairro" className="col-span-2 px-3 py-2 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                    <input value={form.address_city} onChange={e => setForm({ ...form, address_city: e.target.value })} placeholder="Cidade" className="col-span-2 px-3 py-2 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                    <input value={form.address_state} onChange={e => setForm({ ...form, address_state: e.target.value })} placeholder="UF" maxLength={2} className="col-span-1 px-3 py-2 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200 uppercase" />
-                    <input value={form.address_zip} onChange={e => setForm({ ...form, address_zip: e.target.value })} placeholder="CEP" className="col-span-1 px-3 py-2 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                    <input value={form.address_street} onChange={e => setForm({ ...form, address_street: e.target.value })} placeholder="Rua" className="col-span-4 px-3 py-2 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]" />
+                    <input value={form.address_number} onChange={e => setForm({ ...form, address_number: e.target.value })} placeholder="Nº" className="col-span-1 px-3 py-2 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]" />
+                    <input value={form.address_complement} onChange={e => setForm({ ...form, address_complement: e.target.value })} placeholder="Comp." className="col-span-1 px-3 py-2 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]" />
+                    <input value={form.address_neighborhood} onChange={e => setForm({ ...form, address_neighborhood: e.target.value })} placeholder="Bairro" className="col-span-2 px-3 py-2 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]" />
+                    <input value={form.address_city} onChange={e => setForm({ ...form, address_city: e.target.value })} placeholder="Cidade" className="col-span-2 px-3 py-2 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]" />
+                    <input value={form.address_state} onChange={e => setForm({ ...form, address_state: e.target.value })} placeholder="UF" maxLength={2} className="col-span-1 px-3 py-2 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] uppercase" />
+                    <input value={form.address_zip} onChange={e => setForm({ ...form, address_zip: e.target.value })} placeholder="CEP" className="col-span-1 px-3 py-2 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)]" />
                   </div>
                 </div>
 
@@ -699,7 +699,7 @@ export default function PropertiesPage() {
                     onChange={e => setForm({ ...form, description: e.target.value })}
                     rows={3}
                     placeholder="Descreva o imóvel..."
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200 resize-none"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] resize-none"
                   />
                 </div>
 
@@ -714,7 +714,7 @@ export default function PropertiesPage() {
                         onClick={() => toggleFeature(f)}
                         className={`px-3 py-1.5 rounded-lg text-[11px] font-medium border transition-all ${
                           form.features.includes(f)
-                            ? 'bg-blue-50 border-blue-200 text-blue-700'
+                            ? 'bg-[var(--primary-light)] border-[var(--primary)/30] text-[var(--primary)]'
                             : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
                         }`}
                       >
@@ -732,7 +732,7 @@ export default function PropertiesPage() {
                     onChange={e => setForm({ ...form, notes: e.target.value })}
                     rows={2}
                     placeholder="Notas internas (não visíveis ao cliente)..."
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200 resize-none"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-[13px] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] resize-none"
                   />
                 </div>
               </div>
@@ -745,7 +745,7 @@ export default function PropertiesPage() {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-500 text-white text-[13px] font-medium hover:bg-blue-600 transition-all disabled:opacity-50"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--primary)] text-white text-[13px] font-medium hover:bg-[var(--primary-hover)] transition-all disabled:opacity-50"
                 >
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
                   {editingId ? 'Salvar' : 'Cadastrar'}
@@ -821,7 +821,7 @@ export default function PropertiesPage() {
                 </div>
 
                 {/* Price */}
-                <p className="text-[24px] font-bold text-blue-600">
+                <p className="text-[24px] font-bold text-[var(--primary)]">
                   {formatCurrency(selectedProperty.price)}
                   {selectedProperty.transaction_type === 'aluguel' && <span className="text-[13px] text-gray-400 font-normal">/mês</span>}
                 </p>
@@ -864,7 +864,7 @@ export default function PropertiesPage() {
                     <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Características</p>
                     <div className="flex flex-wrap gap-1.5">
                       {selectedProperty.features.map((f, i) => (
-                        <span key={i} className="text-[11px] px-2 py-1 rounded-lg bg-blue-50 text-blue-600 font-medium">{f}</span>
+                        <span key={i} className="text-[11px] px-2 py-1 rounded-lg bg-[var(--primary-light)] text-[var(--primary)] font-medium">{f}</span>
                       ))}
                     </div>
                   </div>
@@ -886,11 +886,11 @@ export default function PropertiesPage() {
                           escola: '#f59e0b',
                           hospital: '#ef4444',
                           supermercado: '#10b981',
-                          metro: '#6366f1',
+                          metro: 'var(--primary)',
                           parque: '#22c55e',
                           banco: '#64748b',
                           restaurante: '#f97316',
-                        } as Record<string, string>)[p.category as string] || '#6366f1',
+                        } as Record<string, string>)[p.category as string] || 'var(--primary)',
                       })).filter((m: any) => m.lat && m.lng) || []}
                     />
                   </div>
@@ -923,7 +923,7 @@ export default function PropertiesPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => { openEdit(selectedProperty); setSelectedProperty(null); }}
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#0f1b2d] text-white text-[13px] font-medium hover:bg-[#1a2d42] transition-all"
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[var(--sidebar)] text-white text-[13px] font-medium hover:bg-[var(--sidebar-hover)] transition-all"
                   >
                     <Pencil className="w-4 h-4" />
                     Editar
