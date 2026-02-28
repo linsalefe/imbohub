@@ -34,22 +34,12 @@ const menuGroups = [
       { href: '/conversations', label: 'Conversas', icon: MessageCircle, hasBadge: true },
       { href: '/pipeline', label: 'Pipeline', icon: GitBranch },
       { href: '/properties', label: 'Imóveis', icon: Building2 },
-      { href: '/relatorios', label: 'Relatórios', icon: Download },
-    ],
-  },
-  {
-    label: 'Marketing',
-    items: [
-      { href: '/dashboard-roi', label: 'Campanhas', icon: BarChart3 },
-      { href: '/landing-pages', label: 'Landing Pages', icon: FileText },
     ],
   },
   {
     label: 'Configurações',
     items: [
       { href: '/users', label: 'Usuários', icon: Users },
-      { href: '/automacoes', label: 'Automações', icon: Zap },
-      { href: '/voice-ai', label: 'Voice AI', icon: PhoneCall },
       { href: '/agenda', label: 'Agenda', icon: Calendar },
       { href: '/canais', label: 'Canais', icon: Radio },
     ],
