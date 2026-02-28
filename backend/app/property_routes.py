@@ -5,6 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from pydantic import BaseModel
+import httpx
+import os
 from typing import Optional, List
 from app.database import get_db
 from app.models import Property, PropertyNearbyPlace, PropertyInterest, Contact
@@ -141,6 +143,42 @@ def _build_address(p: Property) -> str:
         parts.append(city)
     return " — ".join(parts) if parts else ""
 
+async def geocode_address(prop: Property) -> tuple[float, float] | None:
+    """Busca lat/lng pelo endereço via Google Geocoding API."""
+    key = os.getenv("GOOGLE_MAPS_API_KEY")
+    if not key:
+        return None
+
+    parts = []
+    if prop.address_street:
+        street = prop.address_street
+        if prop.address_number:
+            street += f", {prop.address_number}"
+        parts.append(street)
+    if prop.address_neighborhood:
+        parts.append(prop.address_neighborhood)
+    if prop.address_city:
+        parts.append(prop.address_city)
+    if prop.address_state:
+        parts.append(prop.address_state)
+    if prop.address_zip:
+        parts.append(prop.address_zip)
+
+    if not parts:
+        return None
+
+    address = ", ".join(parts)
+
+    async with httpx.AsyncClient() as client:
+        res = await client.get(
+            "https://maps.googleapis.com/maps/api/geocode/json",
+            params={"address": address, "key": key},
+        )
+        data = res.json()
+        if data.get("results"):
+            loc = data["results"][0]["geometry"]["location"]
+            return loc["lat"], loc["lng"]
+    return None
 
 # ==================== LISTAR ====================
 
@@ -254,6 +292,11 @@ async def create_property(req: PropertyCreate, db: AsyncSession = Depends(get_db
         notes=req.notes,
     )
     db.add(prop)
+    # Auto-geocode se não tem coordenadas
+    if not prop.latitude or not prop.longitude:
+        coords = await geocode_address(prop)
+        if coords:
+            prop.latitude, prop.longitude = coords
     await db.commit()
     await db.refresh(prop)
 
@@ -279,6 +322,12 @@ async def update_property(property_id: int, req: PropertyUpdate, db: AsyncSessio
         else:
             setattr(prop, field, value)
 
+    # Re-geocode se endereço mudou e não tem coordenadas manuais
+    address_fields = ["address_street", "address_number", "address_neighborhood", "address_city", "address_state", "address_zip"]
+    if any(f in update_data for f in address_fields):
+        coords = await geocode_address(prop)
+        if coords:
+            prop.latitude, prop.longitude = coords
     await db.commit()
     await db.refresh(prop)
 
