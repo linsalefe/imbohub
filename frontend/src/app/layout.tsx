@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/auth-context";
 import { Toaster } from "sonner";
 
-const geist = Geist({ subsets: ["latin"] });
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
-  title: "EduFlow",
-  description: "Central de Atendimento Integrado",
+  title: "ImobHub CRM",
+  description: "CRM Imobiliário Inteligente",
   icons: {
     icon: "/logo-icon-color.png",
   },
@@ -21,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={geist.className}>
+      <body className={poppins.className}>
         <AuthProvider>{children}</AuthProvider>
         <Toaster
           position="top-right"
