@@ -179,6 +179,77 @@ async def geocode_address(prop: Property) -> tuple[float, float] | None:
             loc = data["results"][0]["geometry"]["location"]
             return loc["lat"], loc["lng"]
     return None
+    
+#busca automática de POS
+
+async def fetch_nearby_places(prop: Property, db: AsyncSession):
+    """Busca POIs próximos via Google Places API e salva no banco."""
+    key = os.getenv("GOOGLE_MAPS_API_KEY")
+    if not key or not prop.latitude or not prop.longitude:
+        return
+
+    categories = {
+        "escola": "school",
+        "hospital": "hospital",
+        "supermercado": "supermarket",
+        "metro": "subway_station",
+        "parque": "park",
+        "banco": "bank",
+        "restaurante": "restaurant",
+    }
+
+    # Limpar POIs antigos
+    from sqlalchemy import delete
+    await db.execute(
+        delete(PropertyNearbyPlace).where(PropertyNearbyPlace.property_id == prop.id)
+    )
+
+    async with httpx.AsyncClient() as client:
+        for category_pt, place_type in categories.items():
+            try:
+                res = await client.get(
+                    "https://maps.googleapis.com/maps/api/place/nearbysearch/json",
+                    params={
+                        "location": f"{prop.latitude},{prop.longitude}",
+                        "radius": 1500,
+                        "type": place_type,
+                        "key": key,
+                        "language": "pt-BR",
+                    },
+                )
+                data = res.json()
+
+                for place in data.get("results", [])[:3]:  # Top 3 por categoria
+                    loc = place.get("geometry", {}).get("location", {})
+                    
+                    # Calcular distância aproximada em metros
+                    import math
+                    lat1, lon1 = float(prop.latitude), float(prop.longitude)
+                    lat2, lon2 = loc.get("lat", 0), loc.get("lng", 0)
+                    R = 6371000
+                    dlat = math.radians(lat2 - lat1)
+                    dlon = math.radians(lon2 - lon1)
+                    a = math.sin(dlat/2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon/2)**2
+                    distance = int(R * 2 * math.atan2(math.sqrt(a), math.sqrt(1-a)))
+
+                    # Tempo caminhando (~80m/min)
+                    walk_minutes = round(distance / 80)
+                    duration = f"{walk_minutes} min" if walk_minutes < 60 else f"{walk_minutes // 60}h{walk_minutes % 60:02d}"
+
+                    db.add(PropertyNearbyPlace(
+                        property_id=prop.id,
+                        category=category_pt,
+                        name=place.get("name", ""),
+                        address=place.get("vicinity", ""),
+                        distance_meters=distance,
+                        duration_walking=duration,
+                        latitude=loc.get("lat"),
+                        longitude=loc.get("lng"),
+                        rating=place.get("rating"),
+                    ))
+            except Exception as e:
+                print(f"Erro ao buscar {category_pt}: {e}")
+                continue
 
 # ==================== LISTAR ====================
 
@@ -297,6 +368,10 @@ async def create_property(req: PropertyCreate, db: AsyncSession = Depends(get_db
         coords = await geocode_address(prop)
         if coords:
             prop.latitude, prop.longitude = coords
+
+    # Buscar POIs próximos
+    await db.flush()
+    await fetch_nearby_places(prop, db)
     await db.commit()
     await db.refresh(prop)
 
@@ -328,6 +403,10 @@ async def update_property(property_id: int, req: PropertyUpdate, db: AsyncSessio
         coords = await geocode_address(prop)
         if coords:
             prop.latitude, prop.longitude = coords
+    # Re-buscar POIs se coordenadas mudaram
+    if any(f in update_data for f in address_fields) or "latitude" in update_data or "longitude" in update_data:
+        await fetch_nearby_places(prop, db)
+    
     await db.commit()
     await db.refresh(prop)
 
