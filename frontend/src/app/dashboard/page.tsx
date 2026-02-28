@@ -170,7 +170,7 @@ export default function DashboardPage() {
   if (loading || !stats) {
     return (
       <AppLayout>
-        <div className="animate-pulse space-y-6 max-w-7xl mx-auto p-4 lg:p-6">
+        <div className="animate-pulse space-y-6 p-4 lg:p-6">
           <div className="h-7 bg-gray-200 rounded w-56" />
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => <div key={i} className="h-[100px] bg-gray-200 rounded-2xl" />)}
@@ -219,7 +219,7 @@ export default function DashboardPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-4 lg:space-y-5 max-w-7xl mx-auto overflow-y-auto h-full pb-6 px-4 lg:px-6">
+      <div className="space-y-4 lg:space-y-5 overflow-y-auto h-full pb-6 px-4 lg:px-6">
 
         {/* Header */}
         <div className={`transition-all duration-700 ease-out ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
