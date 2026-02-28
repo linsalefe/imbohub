@@ -21,10 +21,10 @@ import {
   GitBranch,
   Building2,
   Calendar,
+  Bot,
   X,
   Search,
   Download,
-  Bot,
 } from 'lucide-react';
 
 const menuGroups = [
@@ -107,22 +107,23 @@ export default function Sidebar({ mobileOpen = false, onMobileClose }: SidebarPr
       {/* Logo */}
       <div className="h-16 flex items-center px-4" style={{ borderBottom: '1px solid var(--sidebar-border)' }}>
         <div className={`flex items-center gap-3 w-full ${collapsed ? 'lg:justify-center' : 'justify-between'}`}>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center">
+            {/* Logo completa (expandido) */}
+            <Image
+              src="/logo-horizontal-white.png"
+              alt="ImobHub CRM"
+              width={150}
+              height={36}
+              className={`object-contain flex-shrink-0 ${collapsed ? 'lg:hidden' : ''}`}
+            />
+            {/* Só ícone (colapsado) */}
             <Image
               src="/logo-icon-white.png"
               alt="ImobHub"
               width={34}
               height={34}
-              className="object-contain flex-shrink-0"
+              className={`object-contain flex-shrink-0 hidden ${collapsed ? 'lg:block' : ''}`}
             />
-            <div className={`flex flex-col ${collapsed ? 'lg:hidden' : ''}`}>
-              <span className="text-white font-semibold text-[15px] tracking-widest uppercase leading-tight">
-                ImobHub
-              </span>
-              <span className="text-[10px] font-medium tracking-wide" style={{ color: 'var(--sidebar-text)' }}>
-                CRM
-              </span>
-            </div>
           </div>
           {onMobileClose && (
             <button
