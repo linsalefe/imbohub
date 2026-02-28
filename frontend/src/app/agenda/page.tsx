@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 import AppLayout from '@/components/AppLayout';
 import ConfirmModal from '@/components/ConfirmModal';
-import { Calendar, Clock, Phone, User, GraduationCap, Plus, X, ChevronLeft, ChevronRight, Bot, UserCheck, Trash2, Edit3, Check, Ban } from 'lucide-react';
+import { Calendar, Clock, Phone, User, Building2, Plus, X, ChevronLeft, ChevronRight, MapPin, UserCheck, Trash2, Edit3, Check, Ban, Home, Handshake } from 'lucide-react';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api';
 
@@ -36,6 +36,14 @@ const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> =
   cancelled: { label: 'Cancelado', color: 'text-gray-500', bg: 'bg-gray-50 border-gray-200' },
 };
 
+const TYPE_MAP: Record<string, { label: string; icon: any; color: string; bg: string }> = {
+  visita: { label: 'Visita', icon: Home, color: 'text-blue-600', bg: 'bg-blue-50' },
+  reuniao: { label: 'Reunião', icon: Handshake, color: 'text-purple-600', bg: 'bg-purple-50' },
+  ligacao: { label: 'Ligação', icon: Phone, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  voice_ai: { label: 'Voice AI', icon: Phone, color: 'text-[#6366f1]', bg: 'bg-[#6366f1]/10' },
+  consultant: { label: 'Corretor', icon: UserCheck, color: 'text-pink-500', bg: 'bg-pink-50' },
+};
+
 const MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 const WEEKDAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
@@ -53,10 +61,10 @@ export default function AgendaPage() {
   // Form
   const [formName, setFormName] = useState('');
   const [formPhone, setFormPhone] = useState('');
-  const [formCourse, setFormCourse] = useState('');
+  const [formProperty, setFormProperty] = useState('');
   const [formDate, setFormDate] = useState('');
   const [formTime, setFormTime] = useState('');
-  const [formType, setFormType] = useState('voice_ai');
+  const [formType, setFormType] = useState('visita');
   const [formNotes, setFormNotes] = useState('');
   const [saving, setSaving] = useState(false);
   const [confirmAction, setConfirmAction] = useState<{ title: string; message: string; onConfirm: () => void } | null>(null);
@@ -109,10 +117,10 @@ export default function AgendaPage() {
     setEditingSchedule(null);
     setFormName('');
     setFormPhone('');
-    setFormCourse('');
+    setFormProperty('');
     setFormDate(date || new Date().toISOString().split('T')[0]);
     setFormTime('10:00');
-    setFormType('voice_ai');
+    setFormType('visita');
     setFormNotes('');
     setShowModal(true);
   };
@@ -121,7 +129,7 @@ export default function AgendaPage() {
     setEditingSchedule(s);
     setFormName(s.contact_name);
     setFormPhone(s.phone);
-    setFormCourse(s.course);
+    setFormProperty(s.course);
     setFormDate(s.scheduled_date);
     setFormTime(s.scheduled_time);
     setFormType(s.type);
@@ -144,7 +152,7 @@ export default function AgendaPage() {
           method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contact_wa_id: phoneClean, contact_name: formName, phone: phoneClean,
-            course: formCourse, scheduled_date: formDate, scheduled_time: formTime,
+            course: formProperty, scheduled_date: formDate, scheduled_time: formTime,
             type: formType, notes: formNotes,
           }),
         });
@@ -195,8 +203,9 @@ export default function AgendaPage() {
     if (filter === 'all') return true;
     if (filter === 'today') return s.scheduled_date === today;
     if (filter === 'pending') return s.status === 'pending';
-    if (filter === 'voice_ai') return s.type === 'voice_ai';
-    if (filter === 'consultant') return s.type === 'consultant';
+    if (filter === 'visita') return s.type === 'visita';
+    if (filter === 'reuniao') return s.type === 'reuniao';
+    if (filter === 'ligacao') return s.type === 'ligacao';
     return s.status === filter;
   }).sort((a, b) => a.scheduled_at.localeCompare(b.scheduled_at));
 
@@ -209,7 +218,7 @@ export default function AgendaPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
           <div>
             <h1 className="text-xl lg:text-2xl font-bold text-gray-800">Agenda</h1>
-            <p className="text-sm text-gray-500">Agendamentos de ligações da IA e consultoras</p>
+            <p className="text-sm text-gray-500">Visitas, reuniões e ligações com leads</p>
           </div>
           <button onClick={() => openNewSchedule()} className="flex items-center gap-2 px-4 py-2.5 bg-[#6366f1] text-white rounded-xl hover:bg-[#5558e6] transition-colors text-sm font-medium w-fit">
             <Plus className="w-4 h-4" /> Novo Agendamento
@@ -246,8 +255,9 @@ export default function AgendaPage() {
               <option value="pending">Pendentes</option>
               <option value="completed">Concluídos</option>
               <option value="cancelled">Cancelados</option>
-              <option value="voice_ai">Voice AI</option>
-              <option value="consultant">Consultora</option>
+              <option value="visita">Visitas</option>
+              <option value="reuniao">Reuniões</option>
+              <option value="ligacao">Ligações</option>
             </select>
           </div>
         </div>
@@ -276,7 +286,6 @@ export default function AgendaPage() {
                   const daySchedules = getSchedulesForDate(dateStr);
                   const isToday = dateStr === today;
                   const isSelected = dateStr === selectedDate;
-                  const hasPending = daySchedules.some(s => s.status === 'pending');
 
                   return (
                     <button
@@ -310,7 +319,7 @@ export default function AgendaPage() {
             </div>
 
             {/* Side panel */}
-            <div className="w-[380px] bg-white rounded-xl border border-gray-200 p-5 max-h-[600px] overflow-y-auto">
+            <div className="w-full lg:w-[380px] bg-white rounded-xl border border-gray-200 p-5 max-h-[600px] overflow-y-auto">
               {selectedDate ? (
                 <>
                   <div className="flex items-center justify-between mb-4">
@@ -344,33 +353,37 @@ export default function AgendaPage() {
               <p className="text-center text-gray-400 py-16">Nenhum agendamento encontrado</p>
             ) : (
               <div className="divide-y divide-gray-100">
-                {filteredSchedules.map(s => (
-                  <div key={s.id} className="flex items-center gap-4 px-5 py-3.5 hover:bg-gray-50 transition-colors">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${s.type === 'voice_ai' ? 'bg-[#6366f1]/10' : 'bg-pink-50'}`}>
-                      {s.type === 'voice_ai' ? <Bot className="w-5 h-5 text-[#6366f1]" /> : <UserCheck className="w-5 h-5 text-pink-500" />}
+                {filteredSchedules.map(s => {
+                  const typeInfo = TYPE_MAP[s.type] || TYPE_MAP.visita;
+                  const TypeIcon = typeInfo.icon;
+                  return (
+                    <div key={s.id} className="flex items-center gap-4 px-5 py-3.5 hover:bg-gray-50 transition-colors">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${typeInfo.bg}`}>
+                        <TypeIcon className={`w-5 h-5 ${typeInfo.color}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-800 truncate">{s.contact_name || s.phone}</p>
+                        <p className="text-xs text-gray-400">{s.course ? `${typeInfo.label} · ${s.course}` : typeInfo.label}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-medium text-gray-700">{formatDate(s.scheduled_date)}</p>
+                        <p className="text-xs text-gray-400">{s.scheduled_time}</p>
+                      </div>
+                      <div className={`px-2.5 py-1 rounded-full text-xs font-medium border ${STATUS_MAP[s.status]?.bg || 'bg-gray-50'} ${STATUS_MAP[s.status]?.color || 'text-gray-500'}`}>
+                        {STATUS_MAP[s.status]?.label || s.status}
+                      </div>
+                      <div className="flex gap-1">
+                        {s.status === 'pending' && (
+                          <>
+                            <button onClick={() => openEditSchedule(s)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-600"><Edit3 className="w-4 h-4" /></button>
+                            <button onClick={() => handleCancel(s.id)} className="p-1.5 hover:bg-red-50 rounded-lg text-gray-400 hover:text-red-500"><Ban className="w-4 h-4" /></button>
+                          </>
+                        )}
+                        <button onClick={() => handleDelete(s.id)} className="p-1.5 hover:bg-red-50 rounded-lg text-gray-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-800 truncate">{s.contact_name || s.phone}</p>
-                      <p className="text-xs text-gray-400">{s.course}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-gray-700">{formatDate(s.scheduled_date)}</p>
-                      <p className="text-xs text-gray-400">{s.scheduled_time}</p>
-                    </div>
-                    <div className={`px-2.5 py-1 rounded-full text-xs font-medium border ${STATUS_MAP[s.status]?.bg || 'bg-gray-50'} ${STATUS_MAP[s.status]?.color || 'text-gray-500'}`}>
-                      {STATUS_MAP[s.status]?.label || s.status}
-                    </div>
-                    <div className="flex gap-1">
-                      {s.status === 'pending' && (
-                        <>
-                          <button onClick={() => openEditSchedule(s)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-600"><Edit3 className="w-4 h-4" /></button>
-                          <button onClick={() => handleCancel(s.id)} className="p-1.5 hover:bg-red-50 rounded-lg text-gray-400 hover:text-red-500"><Ban className="w-4 h-4" /></button>
-                        </>
-                      )}
-                      <button onClick={() => handleDelete(s.id)} className="p-1.5 hover:bg-red-50 rounded-lg text-gray-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -398,8 +411,8 @@ export default function AgendaPage() {
                     <input value={formPhone} onChange={e => setFormPhone(e.target.value)} className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6366f1]" placeholder="5581999999999" />
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-gray-500 mb-1 block">Curso</label>
-                    <input value={formCourse} onChange={e => setFormCourse(e.target.value)} className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6366f1]" placeholder="Ex: Psicologia Hospitalar" />
+                    <label className="text-xs font-medium text-gray-500 mb-1 block">Imóvel / Endereço</label>
+                    <input value={formProperty} onChange={e => setFormProperty(e.target.value)} className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6366f1]" placeholder="Ex: Apt 3 quartos no Cruzeiro" />
                   </div>
                 </>
               )}
@@ -418,11 +431,14 @@ export default function AgendaPage() {
               <div>
                 <label className="text-xs font-medium text-gray-500 mb-1 block">Tipo</label>
                 <div className="flex gap-2">
-                  <button onClick={() => setFormType('voice_ai')} className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium border transition-colors ${formType === 'voice_ai' ? 'border-[#6366f1] bg-[#6366f1]/10 text-[#6366f1]' : 'border-gray-200 text-gray-500 hover:bg-gray-50'}`}>
-                    <Bot className="w-4 h-4" /> Voice AI
+                  <button onClick={() => setFormType('visita')} className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium border transition-colors ${formType === 'visita' ? 'border-blue-400 bg-blue-50 text-blue-600' : 'border-gray-200 text-gray-500 hover:bg-gray-50'}`}>
+                    <Home className="w-4 h-4" /> Visita
                   </button>
-                  <button onClick={() => setFormType('consultant')} className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium border transition-colors ${formType === 'consultant' ? 'border-pink-400 bg-pink-50 text-pink-600' : 'border-gray-200 text-gray-500 hover:bg-gray-50'}`}>
-                    <UserCheck className="w-4 h-4" /> Consultora
+                  <button onClick={() => setFormType('reuniao')} className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium border transition-colors ${formType === 'reuniao' ? 'border-purple-400 bg-purple-50 text-purple-600' : 'border-gray-200 text-gray-500 hover:bg-gray-50'}`}>
+                    <Handshake className="w-4 h-4" /> Reunião
+                  </button>
+                  <button onClick={() => setFormType('ligacao')} className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium border transition-colors ${formType === 'ligacao' ? 'border-emerald-400 bg-emerald-50 text-emerald-600' : 'border-gray-200 text-gray-500 hover:bg-gray-50'}`}>
+                    <Phone className="w-4 h-4" /> Ligação
                   </button>
                 </div>
               </div>
@@ -442,7 +458,7 @@ export default function AgendaPage() {
           </div>
         </div>
       )}
-      {/* Confirm Modal */}
+
       {confirmAction && (
         <ConfirmModal
           open={!!confirmAction}
@@ -457,16 +473,19 @@ export default function AgendaPage() {
 }
 
 function ScheduleCard({ schedule: s, onEdit, onCancel, onDelete }: { schedule: Schedule; onEdit: (s: Schedule) => void; onCancel: (id: number) => void; onDelete: (id: number) => void }) {
+  const typeInfo = TYPE_MAP[s.type] || TYPE_MAP.visita;
+  const TypeIcon = typeInfo.icon;
+
   return (
     <div className={`p-3.5 rounded-xl border ${s.status === 'cancelled' ? 'opacity-50' : ''} ${STATUS_MAP[s.status]?.bg || 'bg-gray-50 border-gray-200'}`}>
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
-          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${s.type === 'voice_ai' ? 'bg-[#6366f1]/10' : 'bg-pink-50'}`}>
-            {s.type === 'voice_ai' ? <Bot className="w-4 h-4 text-[#6366f1]" /> : <UserCheck className="w-4 h-4 text-pink-500" />}
+          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${typeInfo.bg}`}>
+            <TypeIcon className={`w-4 h-4 ${typeInfo.color}`} />
           </div>
           <div>
             <p className="text-sm font-medium text-gray-800">{s.contact_name || s.phone}</p>
-            <p className="text-[11px] text-gray-400">{s.type === 'voice_ai' ? 'Voice AI (Nat)' : 'Consultora'}</p>
+            <p className="text-[11px] text-gray-400">{typeInfo.label}</p>
           </div>
         </div>
         <span className="text-sm font-semibold text-gray-700">{s.scheduled_time}</span>
@@ -474,7 +493,7 @@ function ScheduleCard({ schedule: s, onEdit, onCancel, onDelete }: { schedule: S
 
       {s.course && (
         <div className="flex items-center gap-1.5 mb-2">
-          <GraduationCap className="w-3.5 h-3.5 text-gray-400" />
+          <Building2 className="w-3.5 h-3.5 text-gray-400" />
           <span className="text-xs text-gray-500">{s.course}</span>
         </div>
       )}
