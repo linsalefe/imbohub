@@ -18,10 +18,10 @@ export default function AppLayout({ children, fullWidth = false }: { children: R
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f8f9fb]">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-7 h-7 text-[#6366f1] animate-spin" />
-          <p className="text-sm text-gray-400 animate-pulse">Carregando...</p>
+          <Loader2 className="w-7 h-7 animate-spin" style={{ color: 'var(--primary)' }} />
+          <p className="text-sm animate-pulse" style={{ color: 'var(--muted)' }}>Carregando...</p>
         </div>
       </div>
     );
@@ -30,21 +30,22 @@ export default function AppLayout({ children, fullWidth = false }: { children: R
   if (!user) return null;
 
   return (
-    <div className="flex h-screen bg-[#f8f9fb] overflow-hidden">
+    <div className="flex h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       <Sidebar mobileOpen={mobileMenuOpen} onMobileClose={() => setMobileMenuOpen(false)} />
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Mobile header - só para páginas normais (não fullWidth) */}
         {!fullWidth && (
-          <div className="lg:hidden flex items-center gap-3 px-4 py-3 bg-[#0f1b2d] border-b border-white/[0.06]">
+          <div className="lg:hidden flex items-center gap-3 px-4 py-3" style={{ backgroundColor: 'var(--sidebar)', borderBottom: '1px solid var(--sidebar-border)' }}>
             <button
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Abrir menu"
-              className="p-1.5 text-gray-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors"
+              className="p-1.5 hover:bg-white/[0.06] rounded-lg transition-colors"
+              style={{ color: 'var(--sidebar-text)' }}
             >
               <Menu className="w-6 h-6" />
             </button>
-            <span className="text-white font-semibold text-[15px] tracking-wide">EduFlow</span>
+            <span className="text-white font-semibold text-[15px] tracking-wide">ImobHub</span>
           </div>
         )}
 
@@ -53,7 +54,8 @@ export default function AppLayout({ children, fullWidth = false }: { children: R
           <button
             onClick={() => setMobileMenuOpen(true)}
             aria-label="Abrir menu"
-            className="lg:hidden fixed top-3 left-3 z-40 p-2 bg-[#0f1b2d] text-gray-400 hover:text-white rounded-xl shadow-lg border border-white/[0.06] transition-colors"
+            className="lg:hidden fixed top-3 left-3 z-40 p-2 rounded-xl shadow-lg transition-colors"
+            style={{ backgroundColor: 'var(--sidebar)', color: 'var(--sidebar-text)', border: '1px solid var(--sidebar-border)' }}
           >
             <Menu className="w-5 h-5" />
           </button>

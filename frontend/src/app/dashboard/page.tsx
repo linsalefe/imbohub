@@ -67,7 +67,7 @@ const statusLabels: Record<string, string> = {
 
 const statusColors: Record<string, string> = {
   disponivel: '#10b981', reservado: '#f59e0b',
-  vendido: '#6366f1', alugado: '#8b5cf6', inativo: '#94a3b8',
+  vendido: 'var(--primary)', alugado: '#7C6B5C', inativo: '#94a3b8',
 };
 
 function getGreeting(): string {
@@ -141,8 +141,8 @@ export default function DashboardPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f8f9fb]">
-        <Loader2 className="w-8 h-8 text-[#6366f1] animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-[var(--bg)]">
+        <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--primary)' }} />
       </div>
     );
   }
@@ -188,7 +188,7 @@ export default function DashboardPage() {
         {/* Header */}
         <div className={`transition-all duration-700 ease-out ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
           <p className="text-sm text-gray-400 mb-0.5">{getGreeting()},</p>
-          <h1 className="text-xl lg:text-2xl font-semibold text-[#27273D] tracking-tight">
+          <h1 className="text-xl lg:text-2xl font-semibold text-[var(--text)] tracking-tight">
             {user.name.split(' ')[0]}
           </h1>
         </div>
@@ -208,7 +208,7 @@ export default function DashboardPage() {
                   <Icon className={`w-[18px] h-[18px] ${item.iconColor}`} />
                 </div>
                 <div>
-                  <p className="text-xl font-bold text-[#27273D] tabular-nums">{item.value}</p>
+                  <p className="text-xl font-bold text-[var(--text)] tabular-nums">{item.value}</p>
                   <p className="text-[11px] text-gray-400">{item.label}</p>
                 </div>
               </div>
@@ -223,11 +223,11 @@ export default function DashboardPage() {
           <div className="lg:col-span-2 bg-white rounded-2xl p-4 lg:p-5 border border-gray-100">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-[15px] font-semibold text-[#27273D]">Funil de Vendas</h2>
+                <h2 className="text-[15px] font-semibold text-[var(--text)]">Funil de Vendas</h2>
                 <p className="text-[12px] text-gray-400 mt-0.5">{pipeline?.name || 'Pipeline'}</p>
               </div>
-              <div className="w-9 h-9 bg-[#6366f1]/8 rounded-lg flex items-center justify-center">
-                <GitBranch className="w-4 h-4 text-[#6366f1]" />
+              <div className="w-9 h-9 bg-[var(--primary-light)] rounded-lg flex items-center justify-center">
+                <GitBranch className="w-4 h-4 text-[var(--primary)]" />
               </div>
             </div>
 
@@ -265,7 +265,7 @@ export default function DashboardPage() {
           <div className="bg-white rounded-2xl p-4 lg:p-5 border border-gray-100">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-[15px] font-semibold text-[#27273D]">Imóveis</h2>
+                <h2 className="text-[15px] font-semibold text-[var(--text)]">Imóveis</h2>
                 <p className="text-[12px] text-gray-400 mt-0.5">{propStats?.total || 0} cadastrados</p>
               </div>
               <div className="w-9 h-9 bg-cyan-50 rounded-lg flex items-center justify-center">
@@ -337,7 +337,7 @@ export default function DashboardPage() {
           <div className="lg:col-span-2 bg-white rounded-2xl p-4 lg:p-5 border border-gray-100">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-[15px] font-semibold text-[#27273D]">Mensagens da Semana</h2>
+                <h2 className="text-[15px] font-semibold text-[var(--text)]">Mensagens da Semana</h2>
                 <p className="text-[12px] text-gray-400 mt-0.5">{stats.messages_week} no total</p>
               </div>
               <div className="w-9 h-9 bg-purple-50 rounded-lg flex items-center justify-center">
@@ -357,12 +357,12 @@ export default function DashboardPage() {
                     onMouseLeave={() => setHoveredBar(null)}
                   >
                     {isHovered && (
-                      <div className="absolute -top-7 bg-[#27273D] text-white text-[10px] font-medium px-2 py-1 rounded-md whitespace-nowrap z-10">
+                      <div className="absolute -top-7 text-white text-[10px] font-medium px-2 py-1 rounded-md whitespace-nowrap z-10" style={{ backgroundColor: 'var(--text)' }}>
                         {d.count} msg
                       </div>
                     )}
                     <div
-                      className="w-full rounded-lg transition-all duration-500 ease-out bg-[#6366f1] hover:bg-[#818cf8]"
+                      className="w-full rounded-lg transition-all duration-500 ease-out bg-[var(--primary)] hover:opacity-90"
                       style={{ height: `${pct}%`, minHeight: '6px', opacity: isHovered ? 1 : 0.8 }}
                     />
                     <span className="text-[10px] text-gray-400 font-medium">{d.day}</span>
@@ -377,11 +377,11 @@ export default function DashboardPage() {
             <div className="bg-white rounded-2xl p-4 lg:p-5 border border-gray-100">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-[15px] font-semibold text-[#27273D]">Corretores</h2>
+                  <h2 className="text-[15px] font-semibold text-[var(--text)]">Corretores</h2>
                   <p className="text-[12px] text-gray-400 mt-0.5">Leads atribuídos</p>
                 </div>
-                <div className="w-9 h-9 bg-[#6366f1]/8 rounded-lg flex items-center justify-center">
-                  <UserCheck className="w-4 h-4 text-[#6366f1]" />
+                <div className="w-9 h-9 bg-[var(--primary-light)] rounded-lg flex items-center justify-center">
+                  <UserCheck className="w-4 h-4 text-[var(--primary)]" />
                 </div>
               </div>
 
@@ -398,15 +398,15 @@ export default function DashboardPage() {
                       <div key={agent.user_id}>
                         <div className="flex items-center justify-between mb-1.5">
                           <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-[#6366f1]/15 flex items-center justify-center text-[#6366f1] text-[9px] font-bold">
+                            <div className="w-6 h-6 rounded-full bg-[var(--primary-light)] flex items-center justify-center text-[var(--primary)] text-[9px] font-bold">
                               {agent.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
                             </div>
                             <span className="text-[12px] font-medium text-gray-700">{agent.name.split(' ')[0]}</span>
                           </div>
-                          <span className="text-[11px] font-bold text-[#6366f1] tabular-nums">{agent.leads}</span>
+                          <span className="text-[11px] font-bold text-[var(--primary)] tabular-nums">{agent.leads}</span>
                         </div>
                         <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-[#6366f1] rounded-full transition-all duration-700" style={{ width: `${pct}%` }} />
+                          <div className="h-full bg-[var(--primary)] rounded-full transition-all duration-700" style={{ width: `${pct}%` }} />
                         </div>
                       </div>
                     );

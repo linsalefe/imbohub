@@ -34,8 +34,8 @@ export default function LoginPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0f1b2d]">
-        <Loader2 className="w-8 h-8 text-[#6366f1] animate-spin" />
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--sidebar)' }}>
+        <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--primary)' }} />
       </div>
     );
   }
@@ -43,14 +43,14 @@ export default function LoginPage() {
   if (user) return null;
 
   return (
-    <div className="min-h-screen flex bg-[#0f1b2d]">
+    <div className="min-h-screen flex" style={{ backgroundColor: 'var(--sidebar)' }}>
 
       {/* ── Lado esquerdo — Branding ── */}
       <div className="hidden lg:flex lg:w-1/2 flex-col justify-center px-16 relative overflow-hidden">
         {/* Background layers */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#6366f1]/15 via-transparent to-[#818cf8]/5" />
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[#6366f1]/8 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-10 w-72 h-72 bg-[#818cf8]/8 rounded-full blur-3xl" />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(184,92,56,0.12) 0%, transparent 50%, rgba(184,92,56,0.04) 100%)' }} />
+        <div className="absolute top-1/4 -left-20 w-96 h-96 rounded-full blur-3xl" style={{ backgroundColor: 'rgba(184,92,56,0.06)' }} />
+        <div className="absolute bottom-1/4 right-10 w-72 h-72 rounded-full blur-3xl" style={{ backgroundColor: 'rgba(184,92,56,0.04)' }} />
 
         {/* Subtle grid */}
         <div
@@ -64,23 +64,21 @@ export default function LoginPage() {
         <div className={`relative z-10 max-w-lg transition-all duration-1000 ease-out ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Logo */}
           <div className="flex items-center gap-3 mb-10">
-            {/* Troca 1 */}
-            <img src="/logo-icon-white.png" alt="EduFlow" className="w-12 h-12 object-contain" />
+            <img src="/logo-icon-white.png" alt="ImobHub" className="w-12 h-12 object-contain" />
             <div>
-              {/* Troca 2 */}
-              <span className="text-2xl font-bold text-white tracking-tight">EduFlow</span>
-              <span className="text-2xl font-light text-[#818cf8] ml-1.5">Hub</span>
+              <span className="text-2xl font-bold text-white tracking-tight">ImobHub</span>
+              <span className="text-2xl font-light ml-1.5" style={{ color: 'var(--primary)' }}>CRM</span>
             </div>
           </div>
 
           {/* Headline */}
           <h1 className="text-4xl font-bold text-white leading-tight mb-3">
-            Captação de Alunos
+            Gestão Imobiliária
             <br />
-            <span className="text-[#818cf8]">Inteligente</span>
+            <span style={{ color: 'var(--primary)' }}>Inteligente</span>
           </h1>
-          <p className="text-base text-gray-400 leading-relaxed max-w-md">
-            Gerencie leads, qualifique com IA e converta mais alunos com
+          <p className="text-base leading-relaxed max-w-md" style={{ color: 'var(--sidebar-text)' }}>
+            Gerencie leads, qualifique com IA e feche mais negócios com
             atendimento automatizado via WhatsApp.
           </p>
 
@@ -89,7 +87,7 @@ export default function LoginPage() {
             {[
               { icon: MessageCircle, label: 'WhatsApp IA' },
               { icon: Users, label: 'Qualificação automática' },
-              { icon: BarChart3, label: 'Funil de matrículas' },
+              { icon: BarChart3, label: 'Funil de vendas' },
             ].map((feat, i) => (
               <div
                 key={feat.label}
@@ -98,7 +96,7 @@ export default function LoginPage() {
                 }`}
                 style={{ transitionDelay: `${800 + i * 150}ms` }}
               >
-                <feat.icon className="w-4 h-4 text-[#818cf8]" />
+                <feat.icon className="w-4 h-4" style={{ color: 'var(--primary)' }} />
                 <span className="text-sm text-gray-300 font-medium">{feat.label}</span>
               </div>
             ))}
@@ -118,61 +116,62 @@ export default function LoginPage() {
         >
           {/* Logo mobile */}
           <div className="flex items-center gap-3 mb-8 lg:hidden">
-            {/* Troca 3 */}
-            <img src="/logo-icon-white.png" alt="EduFlow" className="w-10 h-10 object-contain" />
-            {/* Troca 4 */}
-            <span className="text-2xl font-bold text-white">EduFlow</span>
+            <img src="/logo-icon-white.png" alt="ImobHub" className="w-10 h-10 object-contain" />
+            <span className="text-2xl font-bold text-white">ImobHub</span>
           </div>
 
-          <div className="bg-white rounded-2xl p-8 shadow-2xl shadow-black/25">
+          <div className="rounded-2xl p-8 shadow-2xl shadow-black/25" style={{ backgroundColor: 'var(--surface)' }}>
             {/* Header */}
             <div className="mb-7">
-              <h2 className="text-[22px] font-bold text-[#27273D]">Bem-vindo de volta</h2>
-              <p className="text-gray-400 text-sm mt-1">Entre com suas credenciais para acessar</p>
+              <h2 className="text-[22px] font-bold" style={{ color: 'var(--text)' }}>Bem-vindo de volta</h2>
+              <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>Entre com suas credenciais para acessar</p>
             </div>
 
             {/* Erro */}
             {error && (
-              <div className="mb-5 flex items-center gap-2.5 px-4 py-3 bg-red-50 border border-red-100 rounded-xl">
-                <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
-                <span className="text-sm text-red-600">{error}</span>
+              <div className="mb-5 flex items-center gap-2.5 px-4 py-3 rounded-xl" style={{ backgroundColor: 'var(--danger-light)', border: '1px solid var(--danger-light)' }}>
+                <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--danger)' }} />
+                <span className="text-sm" style={{ color: 'var(--danger)' }}>{error}</span>
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Email */}
               <div>
-                <label className="block text-[13px] font-medium text-gray-500 mb-1.5">Email</label>
+                <label className="block text-[13px] font-medium mb-1.5" style={{ color: 'var(--muted)' }}>Email</label>
                 <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--muted)' }} />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="seu@email.com"
                     required
-                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-800 placeholder:text-gray-400 focus:border-[#6366f1] focus:ring-4 focus:ring-[#6366f1]/10 focus:bg-white transition-all outline-none"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl text-sm transition-all outline-none"
+                    style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)' }}
                   />
                 </div>
               </div>
 
               {/* Senha */}
               <div>
-                <label className="block text-[13px] font-medium text-gray-500 mb-1.5">Senha</label>
+                <label className="block text-[13px] font-medium mb-1.5" style={{ color: 'var(--muted)' }}>Senha</label>
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--muted)' }} />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-800 placeholder:text-gray-400 focus:border-[#6366f1] focus:ring-4 focus:ring-[#6366f1]/10 focus:bg-white transition-all outline-none"
+                    className="w-full pl-10 pr-12 py-3 rounded-xl text-sm transition-all outline-none"
+                    style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)' }}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
+                    style={{ color: 'var(--muted)' }}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -183,7 +182,10 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 bg-[#6366f1] text-white font-medium rounded-xl hover:bg-[#4f46e5] hover:shadow-lg hover:shadow-[#6366f1]/25 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none disabled:active:scale-100 flex items-center justify-center gap-2 mt-1"
+                className="w-full py-3 text-white font-medium rounded-xl active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:active:scale-100 flex items-center justify-center gap-2 mt-1"
+                style={{ backgroundColor: 'var(--primary)', boxShadow: '0 4px 12px rgba(184,92,56,0.25)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--primary-hover)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--primary)'; }}
               >
                 {loading ? (
                   <>
@@ -197,9 +199,8 @@ export default function LoginPage() {
             </form>
           </div>
 
-          {/* Troca 5 */}
-          <p className="text-center text-[11px] text-gray-600 mt-6">
-            EduFlow © {new Date().getFullYear()} — Todos os direitos reservados
+          <p className="text-center text-[11px] mt-6" style={{ color: 'var(--sidebar-text)' }}>
+            ImobHub © {new Date().getFullYear()} — Todos os direitos reservados
           </p>
         </div>
       </div>

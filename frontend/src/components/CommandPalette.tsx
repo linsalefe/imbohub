@@ -149,26 +149,27 @@ export default function CommandPalette() {
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-lg mx-4 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden animate-in zoom-in-95 slide-in-from-top-2 duration-200">
+      <div className="relative w-full max-w-lg mx-4 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-top-2 duration-200" style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}>
 
         {/* Input */}
-        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-100">
-          <Search className="w-5 h-5 text-gray-400 flex-shrink-0" />
+        <div className="flex items-center gap-3 px-4 py-3.5" style={{ borderBottom: '1px solid var(--border)' }}>
+          <Search className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--muted)' }} />
           <input
             ref={inputRef}
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Buscar contatos, páginas..."
-            className="flex-1 text-[15px] text-gray-800 placeholder:text-gray-400 outline-none bg-transparent"
+            className="flex-1 text-[15px] placeholder:text-gray-400 outline-none bg-transparent"
+            style={{ color: 'var(--text)' }}
             aria-label="Busca global"
           />
           {query && (
             <button onClick={() => setQuery('')} aria-label="Limpar" className="p-1 hover:bg-gray-100 rounded-lg transition-colors">
-              <X className="w-4 h-4 text-gray-400" />
+              <X className="w-4 h-4" style={{ color: 'var(--muted)' }} />
             </button>
           )}
-          <kbd className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 bg-gray-100 text-gray-400 text-[11px] font-medium rounded-md border border-gray-200">
+          <kbd className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 text-[11px] font-medium rounded-md" style={{ backgroundColor: 'var(--bg)', color: 'var(--muted)', border: '1px solid var(--border)' }}>
             Esc
           </kbd>
         </div>
@@ -179,22 +180,22 @@ export default function CommandPalette() {
           {/* Loading */}
           {loading && query.length >= 2 && (
             <div className="px-4 py-8 text-center">
-              <div className="w-5 h-5 border-2 border-gray-200 border-t-[#6366f1] rounded-full animate-spin mx-auto" />
+              <div className="w-5 h-5 border-2 rounded-full animate-spin mx-auto" style={{ borderColor: 'var(--border)', borderTopColor: 'var(--primary)' }} />
             </div>
           )}
 
           {/* Empty */}
           {showEmpty && (
             <div className="px-4 py-8 text-center">
-              <Search className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-              <p className="text-[13px] text-gray-400">Nenhum resultado para "{query}"</p>
+              <Search className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--border)' }} />
+              <p className="text-[13px]" style={{ color: 'var(--muted)' }}>Nenhum resultado para &ldquo;{query}&rdquo;</p>
             </div>
           )}
 
           {/* Pages */}
           {pages.length > 0 && (
             <div className="px-2 pt-2 pb-1">
-              <p className="px-2 pb-1.5 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Páginas</p>
+              <p className="px-2 pb-1.5 text-[11px] font-semibold uppercase tracking-wider" style={{ color: 'var(--muted)' }}>Páginas</p>
               {pages.map((page, i) => {
                 const Icon = iconMap[page.icon] || LayoutDashboard;
                 const idx = i;
@@ -204,17 +205,17 @@ export default function CommandPalette() {
                     data-index={idx}
                     onClick={() => navigate({ type: 'page', ...page })}
                     onMouseEnter={() => setActiveIndex(idx)}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-colors ${
-                      activeIndex === idx ? 'bg-[#6366f1]/8 text-[#6366f1]' : 'text-gray-600 hover:bg-gray-50'
-                    }`}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-colors"
+                    style={{
+                      backgroundColor: activeIndex === idx ? 'var(--primary-light)' : 'transparent',
+                      color: activeIndex === idx ? 'var(--primary)' : 'var(--text)',
+                    }}
                   >
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                      activeIndex === idx ? 'bg-[#6366f1]/15' : 'bg-gray-100'
-                    }`}>
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: activeIndex === idx ? 'var(--primary-light)' : 'var(--bg)' }}>
                       <Icon className="w-4 h-4" />
                     </div>
                     <span className="text-[13px] font-medium flex-1">{page.label}</span>
-                    <ArrowRight className={`w-3.5 h-3.5 transition-opacity ${activeIndex === idx ? 'opacity-100' : 'opacity-0'}`} />
+                    <ArrowRight className="w-3.5 h-3.5 transition-opacity" style={{ opacity: activeIndex === idx ? 1 : 0 }} />
                   </button>
                 );
               })}
@@ -224,7 +225,7 @@ export default function CommandPalette() {
           {/* Contacts */}
           {contacts.length > 0 && (
             <div className="px-2 pt-2 pb-2">
-              <p className="px-2 pb-1.5 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Contatos</p>
+              <p className="px-2 pb-1.5 text-[11px] font-semibold uppercase tracking-wider" style={{ color: 'var(--muted)' }}>Contatos</p>
               {contacts.map((contact, i) => {
                 const idx = pages.length + i;
                 const initials = contact.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
@@ -234,26 +235,25 @@ export default function CommandPalette() {
                     data-index={idx}
                     onClick={() => navigate({ type: 'contact', ...contact })}
                     onMouseEnter={() => setActiveIndex(idx)}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-colors ${
-                      activeIndex === idx ? 'bg-[#6366f1]/8' : 'hover:bg-gray-50'
-                    }`}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-colors"
+                    style={{ backgroundColor: activeIndex === idx ? 'var(--primary-light)' : 'transparent' }}
                   >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#6366f1] to-[#4f46e5] flex items-center justify-center text-white text-[11px] font-semibold flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[11px] font-semibold flex-shrink-0" style={{ background: 'linear-gradient(135deg, var(--primary), var(--primary-hover))' }}>
                       {initials}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[13px] font-medium text-gray-800 truncate">{contact.name}</p>
+                      <p className="text-[13px] font-medium truncate" style={{ color: 'var(--text)' }}>{contact.name}</p>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[11px] text-gray-400">+{contact.wa_id}</span>
+                        <span className="text-[11px]" style={{ color: 'var(--muted)' }}>+{contact.wa_id}</span>
                         <span className={`w-1.5 h-1.5 rounded-full ${statusColors[contact.lead_status] || 'bg-gray-400'}`} />
                         {contact.tags.slice(0, 2).map(tag => (
-                          <span key={tag.id} className="flex items-center gap-0.5 text-[10px] text-gray-400">
+                          <span key={tag.id} className="flex items-center gap-0.5 text-[10px]" style={{ color: 'var(--muted)' }}>
                             <Hash className="w-2.5 h-2.5" />{tag.name}
                           </span>
                         ))}
                       </div>
                     </div>
-                    <ArrowRight className={`w-3.5 h-3.5 text-[#6366f1] transition-opacity flex-shrink-0 ${activeIndex === idx ? 'opacity-100' : 'opacity-0'}`} />
+                    <ArrowRight className="w-3.5 h-3.5 transition-opacity flex-shrink-0" style={{ color: 'var(--primary)', opacity: activeIndex === idx ? 1 : 0 }} />
                   </button>
                 );
               })}
@@ -263,23 +263,23 @@ export default function CommandPalette() {
           {/* Default state */}
           {!loading && query.length < 2 && (
             <div className="px-4 py-6 text-center">
-              <p className="text-[13px] text-gray-400">Digite pelo menos 2 caracteres para buscar</p>
+              <p className="text-[13px]" style={{ color: 'var(--muted)' }}>Digite pelo menos 2 caracteres para buscar</p>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center gap-4 px-4 py-2.5 border-t border-gray-100 bg-gray-50/50">
-          <div className="flex items-center gap-1.5 text-[11px] text-gray-400">
-            <kbd className="px-1 py-0.5 bg-white border border-gray-200 rounded text-[10px]">↑↓</kbd>
+        <div className="flex items-center gap-4 px-4 py-2.5" style={{ borderTop: '1px solid var(--border)', backgroundColor: 'var(--bg)' }}>
+          <div className="flex items-center gap-1.5 text-[11px]" style={{ color: 'var(--muted)' }}>
+            <kbd className="px-1 py-0.5 rounded text-[10px]" style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}>↑↓</kbd>
             <span>navegar</span>
           </div>
-          <div className="flex items-center gap-1.5 text-[11px] text-gray-400">
-            <kbd className="px-1 py-0.5 bg-white border border-gray-200 rounded text-[10px]">Enter</kbd>
+          <div className="flex items-center gap-1.5 text-[11px]" style={{ color: 'var(--muted)' }}>
+            <kbd className="px-1 py-0.5 rounded text-[10px]" style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}>Enter</kbd>
             <span>abrir</span>
           </div>
-          <div className="flex items-center gap-1.5 text-[11px] text-gray-400">
-            <kbd className="px-1 py-0.5 bg-white border border-gray-200 rounded text-[10px]">Esc</kbd>
+          <div className="flex items-center gap-1.5 text-[11px]" style={{ color: 'var(--muted)' }}>
+            <kbd className="px-1 py-0.5 rounded text-[10px]" style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}>Esc</kbd>
             <span>fechar</span>
           </div>
         </div>
