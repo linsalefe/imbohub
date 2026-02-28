@@ -1,8 +1,59 @@
 @import "tailwindcss";
 
+/* ============================================
+   ImobHub CRM — Design System "Fintech Terrosa"
+   Todas as cores do app nascem daqui.
+   ============================================ */
+
 :root {
-  --background: #f8f9fb;
-  --foreground: #27273D;
+  /* --- Backgrounds --- */
+  --bg: #F9F7F4;
+  --surface: #FFFFFF;
+
+  /* --- Sidebar --- */
+  --sidebar: #2C2220;
+  --sidebar-hover: #3D322E;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-text: #A89B94;
+  --sidebar-text-active: #FFFFFF;
+
+  /* --- Primary (Terracota) --- */
+  --primary: #B85C38;
+  --primary-hover: #9C4D2F;
+  --primary-light: rgba(184, 92, 56, 0.10);
+  --primary-text: #FFFFFF;
+
+  /* --- Text --- */
+  --text: #1A1210;
+  --muted: #94867A;
+
+  /* --- Borders & Elevation --- */
+  --border: #E8E2DA;
+  --shadow: 0 1px 3px rgba(44, 34, 32, 0.06), 0 1px 2px rgba(44, 34, 32, 0.04);
+  --shadow-md: 0 4px 12px rgba(44, 34, 32, 0.08), 0 2px 4px rgba(44, 34, 32, 0.04);
+
+  /* --- Semantic --- */
+  --success: #5D7A3A;
+  --success-light: rgba(93, 122, 58, 0.10);
+  --warning: #C8910A;
+  --warning-light: rgba(200, 145, 10, 0.10);
+  --danger: #A63D3D;
+  --danger-light: rgba(166, 61, 61, 0.10);
+
+  /* --- WhatsApp badge (mantido por UX) --- */
+  --whatsapp: #00a884;
+
+  /* --- Inputs --- */
+  --input-bg: #FFFFFF;
+  --input-border: #D5CEC6;
+  --input-text: #1A1210;
+  --input-placeholder: #A89B94;
+  --input-focus: #B85C38;
+  --input-focus-ring: rgba(184, 92, 56, 0.15);
+
+  /* --- Compat: Tailwind theme bridge --- */
+  --background: var(--bg);
+  --foreground: var(--text);
 }
 
 @theme inline {
@@ -13,14 +64,35 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--text);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar refinada */
+/* Inputs globais — texto sempre visível */
+input,
+textarea,
+select {
+  color: var(--input-text);
+  background-color: var(--input-bg);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--input-placeholder);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
+  outline: none;
+}
+
+/* Scrollbar refinada — tons quentes */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -31,24 +103,24 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: var(--border);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: var(--muted);
 }
 
-/* Seleção de texto */
+/* Seleção de texto — terrosa */
 ::selection {
-  background: rgba(42, 101, 143, 0.15);
-  color: #27273D;
+  background: rgba(184, 92, 56, 0.15);
+  color: var(--text);
 }
 
 /* Remove dark mode para não quebrar a UI */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #f8f9fb;
-    --foreground: #27273D;
+    --background: var(--bg);
+    --foreground: var(--text);
   }
 }

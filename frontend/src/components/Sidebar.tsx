@@ -90,7 +90,6 @@ export default function Sidebar({ mobileOpen = false, onMobileClose }: SidebarPr
   };
 
   const openSearch = () => {
-    // Dispara Cmd+K programaticamente
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, ctrlKey: true, bubbles: true }));
   };
 
@@ -98,28 +97,28 @@ export default function Sidebar({ mobileOpen = false, onMobileClose }: SidebarPr
     <aside
       className={`
         ${collapsed ? 'lg:w-[72px]' : 'lg:w-[250px]'}
-        w-[250px] h-screen bg-[#0f1b2d] flex flex-col
+        w-[250px] h-screen flex flex-col
         transition-all duration-300 ease-in-out flex-shrink-0
-        border-r border-white/[0.06]
       `}
+      style={{ backgroundColor: 'var(--sidebar)', borderRight: '1px solid var(--sidebar-border)' }}
     >
       {/* Logo */}
-      <div className="h-16 flex items-center px-4 border-b border-white/[0.06]">
+      <div className="h-16 flex items-center px-4" style={{ borderBottom: '1px solid var(--sidebar-border)' }}>
         <div className={`flex items-center gap-3 w-full ${collapsed ? 'lg:justify-center' : 'justify-between'}`}>
           <div className="flex items-center gap-3">
             <Image
               src="/logo-icon-white.png"
-              alt="EduFlow"
+              alt="ImobHub"
               width={34}
               height={34}
               className="object-contain flex-shrink-0"
             />
             <div className={`flex flex-col ${collapsed ? 'lg:hidden' : ''}`}>
               <span className="text-white font-semibold text-[15px] tracking-widest uppercase leading-tight">
-                EduFlow
+                ImobHub
               </span>
-              <span className="text-[10px] text-gray-500 font-medium tracking-wide">
-                Hub
+              <span className="text-[10px] font-medium tracking-wide" style={{ color: 'var(--sidebar-text)' }}>
+                CRM
               </span>
             </div>
           </div>
@@ -127,7 +126,8 @@ export default function Sidebar({ mobileOpen = false, onMobileClose }: SidebarPr
             <button
               onClick={onMobileClose}
               aria-label="Fechar menu"
-              className="lg:hidden p-1.5 text-gray-500 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors"
+              className="lg:hidden p-1.5 hover:text-white rounded-lg transition-colors"
+              style={{ color: 'var(--sidebar-text)' }}
             >
               <X className="w-5 h-5" />
             </button>
@@ -142,13 +142,14 @@ export default function Sidebar({ mobileOpen = false, onMobileClose }: SidebarPr
           aria-label="Buscar"
           className={`
             w-full flex items-center gap-2.5 rounded-xl transition-all duration-200
-            bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06]
+            bg-white/[0.04] hover:bg-white/[0.08]
             ${collapsed ? 'lg:justify-center lg:px-0 lg:py-2.5 px-3 py-2' : 'px-3 py-2'}
           `}
+          style={{ border: '1px solid var(--sidebar-border)' }}
         >
-          <Search className="w-4 h-4 text-gray-500 flex-shrink-0" />
-          <span className={`text-[13px] text-gray-500 flex-1 text-left ${collapsed ? 'lg:hidden' : ''}`}>Buscar...</span>
-          <kbd className={`px-1.5 py-0.5 bg-white/[0.06] text-gray-600 text-[10px] font-medium rounded border border-white/[0.06] ${collapsed ? 'lg:hidden' : ''}`}>
+          <Search className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--sidebar-text)' }} />
+          <span className={`text-[13px] flex-1 text-left ${collapsed ? 'lg:hidden' : ''}`} style={{ color: 'var(--sidebar-text)' }}>Buscar...</span>
+          <kbd className={`px-1.5 py-0.5 bg-white/[0.06] text-[10px] font-medium rounded ${collapsed ? 'lg:hidden' : ''}`} style={{ color: 'var(--sidebar-text)', border: '1px solid var(--sidebar-border)' }}>
             ⌘K
           </kbd>
         </button>
@@ -158,7 +159,7 @@ export default function Sidebar({ mobileOpen = false, onMobileClose }: SidebarPr
       <nav className="flex-1 py-3 px-3 space-y-5 overflow-y-auto">
         {menuGroups.map((group) => (
           <div key={group.label}>
-            <p className={`text-[10px] font-semibold text-gray-600 uppercase tracking-widest px-3 mb-2 ${collapsed ? 'lg:hidden' : ''}`}>
+            <p className={`text-[10px] font-semibold uppercase tracking-widest px-3 mb-2 ${collapsed ? 'lg:hidden' : ''}`} style={{ color: 'var(--sidebar-text)' }}>
               {group.label}
             </p>
             <div className="space-y-0.5">
@@ -175,38 +176,56 @@ export default function Sidebar({ mobileOpen = false, onMobileClose }: SidebarPr
                       className={`
                         relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium
                         transition-all duration-200
-                        ${isActive ? 'bg-[#6366f1]/20 text-white' : 'text-gray-400 hover:text-white hover:bg-white/[0.04]'}
                         ${collapsed ? 'lg:justify-center' : ''}
                       `}
+                      style={{
+                        backgroundColor: isActive ? 'var(--primary-light)' : 'transparent',
+                        color: isActive ? 'var(--sidebar-text-active)' : 'var(--sidebar-text)',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isActive) {
+                          e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
+                          e.currentTarget.style.color = 'var(--sidebar-text-active)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive) {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                          e.currentTarget.style.color = 'var(--sidebar-text)';
+                        }
+                      }}
                     >
                       {isActive && (
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-[#6366f1] rounded-r-full" />
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full" style={{ backgroundColor: 'var(--primary)' }} />
                       )}
                       <div className="relative flex-shrink-0">
-                        <Icon className={`w-[18px] h-[18px] transition-colors duration-200 ${isActive ? 'text-[#818cf8]' : 'text-gray-500 group-hover:text-gray-300'}`} />
+                        <Icon
+                          className="w-[18px] h-[18px] transition-colors duration-200"
+                          style={{ color: isActive ? 'var(--primary)' : 'var(--sidebar-text)' }}
+                        />
                         {showBadge && collapsed && (
-                          <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 bg-[#00a884] text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1">
+                          <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1" style={{ backgroundColor: 'var(--whatsapp)' }}>
                             {unreadCount > 99 ? '99+' : unreadCount}
                           </span>
                         )}
                       </div>
                       <span className={collapsed ? 'lg:hidden' : ''}>{item.label}</span>
                       {showBadge && !collapsed && (
-                        <span className="ml-auto min-w-[20px] h-5 bg-[#00a884] text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1.5">
+                        <span className="ml-auto min-w-[20px] h-5 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1.5" style={{ backgroundColor: 'var(--whatsapp)' }}>
                           {unreadCount > 99 ? '99+' : unreadCount}
                         </span>
                       )}
                     </Link>
 
                     {collapsed && (
-                      <div className="hidden lg:block absolute left-full top-1/2 -translate-y-1/2 ml-3 px-2.5 py-1.5 bg-[#1a2d42] text-white text-xs font-medium rounded-lg shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 border border-white/[0.06]">
+                      <div className="hidden lg:block absolute left-full top-1/2 -translate-y-1/2 ml-3 px-2.5 py-1.5 text-white text-xs font-medium rounded-lg shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50" style={{ backgroundColor: 'var(--sidebar-hover)', border: '1px solid var(--sidebar-border)' }}>
                         {item.label}
                         {showBadge && (
-                          <span className="ml-2 bg-[#00a884] text-white text-[9px] font-bold rounded-full px-1.5 py-0.5">
+                          <span className="ml-2 text-white text-[9px] font-bold rounded-full px-1.5 py-0.5" style={{ backgroundColor: 'var(--whatsapp)' }}>
                             {unreadCount}
                           </span>
                         )}
-                        <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-[#1a2d42]" />
+                        <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent" style={{ borderRightColor: 'var(--sidebar-hover)' }} />
                       </div>
                     )}
                   </div>
@@ -218,15 +237,15 @@ export default function Sidebar({ mobileOpen = false, onMobileClose }: SidebarPr
       </nav>
 
       {/* Rodapé */}
-      <div className="px-3 pb-4 space-y-2 border-t border-white/[0.06] pt-4">
+      <div className="px-3 pb-4 space-y-2 pt-4" style={{ borderTop: '1px solid var(--sidebar-border)' }}>
         {user && (
           <div className={`flex items-center gap-3 px-2 py-2 rounded-xl bg-white/[0.03] ${collapsed ? 'lg:justify-center' : ''}`}>
-            <div className="w-9 h-9 rounded-lg bg-[#6366f1]/30 flex items-center justify-center text-[#818cf8] text-xs font-bold flex-shrink-0">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0" style={{ backgroundColor: 'var(--primary-light)', color: 'var(--primary)' }}>
               {getInitials(user.name)}
             </div>
             <div className={`min-w-0 flex-1 ${collapsed ? 'lg:hidden' : ''}`}>
               <p className="text-sm font-medium text-gray-200 truncate leading-tight">{user.name}</p>
-              <p className="text-[11px] text-gray-500 truncate leading-tight">{user.email}</p>
+              <p className="text-[11px] truncate leading-tight" style={{ color: 'var(--sidebar-text)' }}>{user.email}</p>
             </div>
           </div>
         )}
@@ -234,7 +253,16 @@ export default function Sidebar({ mobileOpen = false, onMobileClose }: SidebarPr
         <button
           onClick={handleLogout}
           aria-label="Sair"
-          className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-500 hover:text-red-400 hover:bg-red-400/[0.06] transition-all duration-200 text-[13px] ${collapsed ? 'lg:justify-center' : ''}`}
+          className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all duration-200 text-[13px] ${collapsed ? 'lg:justify-center' : ''}`}
+          style={{ color: 'var(--sidebar-text)' }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = 'var(--danger)';
+            e.currentTarget.style.backgroundColor = 'var(--danger-light)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'var(--sidebar-text)';
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
         >
           <LogOut className="w-[16px] h-[16px] flex-shrink-0" />
           <span className={collapsed ? 'lg:hidden' : ''}>Sair</span>
@@ -243,7 +271,8 @@ export default function Sidebar({ mobileOpen = false, onMobileClose }: SidebarPr
         <button
           onClick={() => setCollapsed(!collapsed)}
           aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
-          className={`hidden lg:flex w-full items-center gap-2.5 px-3 py-2 rounded-xl text-gray-600 hover:text-gray-300 hover:bg-white/[0.04] transition-all duration-200 text-[13px] ${collapsed ? 'justify-center' : ''}`}
+          className={`hidden lg:flex w-full items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-white/[0.04] transition-all duration-200 text-[13px] ${collapsed ? 'justify-center' : ''}`}
+          style={{ color: 'var(--sidebar-text)' }}
         >
           {collapsed ? <ChevronRight className="w-4 h-4" /> : <><ChevronLeft className="w-4 h-4" /><span>Recolher</span></>}
         </button>
