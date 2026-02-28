@@ -110,7 +110,8 @@ const defaultForm = {
 
 function PhotoUrl(path: string) {
   if (path.startsWith('http')) return path;
-  return `${API_BASE}${path}`;
+  const base = API_BASE.replace(/\/api\/?$/, '');
+  return `${base}${path}`;
 }
 
 export default function PropertiesPage() {

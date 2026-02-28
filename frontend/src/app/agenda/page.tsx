@@ -518,3 +518,4 @@ function ScheduleCard({ schedule: s, onEdit, onCancel, onDelete }: { schedule: S
     </div>
   );
 }
+
