@@ -10,30 +10,38 @@ Permite que a equipe comercial gerencie leads, responda conversas em tempo real,
 
 1. [Visão Geral](#-visão-geral)
 2. [Funcionalidades](#-funcionalidades)
-3. [Arquitetura do Sistema](#-arquitetura-do-sistema)
-4. [Tecnologias Utilizadas](#-tecnologias-utilizadas)
-5. [Pré-requisitos](#-pré-requisitos)
-6. [ETAPA 1 — Configuração do Meta Business](#-etapa-1--configuração-do-meta-business)
-7. [ETAPA 2 — Configuração do Ambiente Local](#-etapa-2--configuração-do-ambiente-local)
-8. [ETAPA 3 — Backend (FastAPI)](#-etapa-3--backend-fastapi)
-9. [ETAPA 4 — Banco de Dados (PostgreSQL)](#-etapa-4--banco-de-dados-postgresql)
-10. [ETAPA 5 — Frontend (Next.js)](#-etapa-5--frontend-nextjs)
-11. [ETAPA 6 — Webhook (Receber Mensagens)](#-etapa-6--webhook-receber-mensagens)
-12. [ETAPA 7 — Deploy em Produção](#-etapa-7--deploy-em-produção)
-13. [ETAPA 8 — Templates do WhatsApp](#-etapa-8--templates-do-whatsapp)
-14. [ETAPA 9 — Catálogo de Imóveis](#-etapa-9--catálogo-de-imóveis)
-15. [ETAPA 10 — Agente de IA Imobiliário](#-etapa-10--agente-de-ia-imobiliário)
-16. [ETAPA 11 — Pipeline Dinâmico de Vendas](#-etapa-11--pipeline-dinâmico-de-vendas)
-17. [ETAPA 12 — Google Maps e Places](#-etapa-12--google-maps-e-places)
-18. [ETAPA 13 — Agenda de Visitas](#-etapa-13--agenda-de-visitas)
-19. [ETAPA 14 — Multi-Canal](#-etapa-14--multi-canal)
-20. [Estrutura de Pastas](#-estrutura-de-pastas)
-21. [Banco de Dados — Tabelas](#-banco-de-dados--tabelas)
-22. [API — Endpoints](#-api--endpoints)
-23. [Variáveis de Ambiente](#-variáveis-de-ambiente)
-24. [Comandos Úteis](#-comandos-úteis)
-25. [Solução de Problemas](#-solução-de-problemas)
-26. [Licença](#-licença)
+3. [Design System — Fintech Terrosa](#-design-system--fintech-terrosa)
+4. [Arquitetura do Sistema](#-arquitetura-do-sistema)
+5. [Tecnologias Utilizadas](#-tecnologias-utilizadas)
+6. [Pré-requisitos](#-pré-requisitos)
+7. [ETAPA 1 — Configuração do Meta Business](#-etapa-1--configuração-do-meta-business)
+8. [ETAPA 2 — Configuração do Ambiente Local](#-etapa-2--configuração-do-ambiente-local)
+9. [ETAPA 3 — Backend (FastAPI)](#-etapa-3--backend-fastapi)
+10. [ETAPA 4 — Banco de Dados (PostgreSQL)](#-etapa-4--banco-de-dados-postgresql)
+11. [ETAPA 5 — Frontend (Next.js)](#-etapa-5--frontend-nextjs)
+12. [ETAPA 6 — Webhook (Receber Mensagens)](#-etapa-6--webhook-receber-mensagens)
+13. [ETAPA 7 — Deploy em Produção](#-etapa-7--deploy-em-produção)
+14. [ETAPA 8 — Templates do WhatsApp](#-etapa-8--templates-do-whatsapp)
+15. [ETAPA 9 — Catálogo de Imóveis](#-etapa-9--catálogo-de-imóveis)
+16. [ETAPA 10 — Agente de IA Imobiliário](#-etapa-10--agente-de-ia-imobiliário)
+17. [ETAPA 11 — Pipeline Dinâmico de Vendas](#-etapa-11--pipeline-dinâmico-de-vendas)
+18. [ETAPA 12 — Google Maps e Places](#-etapa-12--google-maps-e-places)
+19. [ETAPA 13 — Agenda de Visitas](#-etapa-13--agenda-de-visitas)
+20. [ETAPA 14 — Multi-Canal](#-etapa-14--multi-canal)
+21. [ETAPA 15 — Voice AI e WebPhone](#-etapa-15--voice-ai-e-webphone)
+22. [ETAPA 16 — Landing Pages](#-etapa-16--landing-pages)
+23. [ETAPA 17 — Automações](#-etapa-17--automações)
+24. [ETAPA 18 — Relatórios e Exportação](#-etapa-18--relatórios-e-exportação)
+25. [ETAPA 19 — Dashboard ROI](#-etapa-19--dashboard-roi)
+26. [ETAPA 20 — Exact Spotter (Integração)](#-etapa-20--exact-spotter-integração)
+27. [ETAPA 21 — Google Calendar](#-etapa-21--google-calendar)
+28. [Estrutura de Pastas](#-estrutura-de-pastas)
+29. [Banco de Dados — Tabelas](#-banco-de-dados--tabelas)
+30. [API — Endpoints](#-api--endpoints)
+31. [Variáveis de Ambiente](#-variáveis-de-ambiente)
+32. [Comandos Úteis](#-comandos-úteis)
+33. [Solução de Problemas](#-solução-de-problemas)
+34. [Licença](#-licença)
 
 ---
 
@@ -49,6 +57,12 @@ O **ImobHub** é uma plataforma web completa de CRM imobiliário com atendimento
 - **Visualizar métricas** no dashboard (funil de vendas, imóveis, mensagens, corretores)
 - **Operar múltiplos canais** (WhatsApp oficial, QR Code, Instagram, Messenger)
 - **Gerenciar equipe** com atribuição de leads e controle de acesso
+- **Fazer ligações pelo navegador** via WebPhone integrado (Twilio)
+- **Criar landing pages** para captação de leads por canal
+- **Exportar relatórios** em Excel (contatos, pipeline, mensagens)
+- **Automatizar envios** em massa com filtros avançados
+- **Acompanhar ROI** por canal e campanha
+- **Integrar com Exact Spotter** para pré-vendas
 
 ---
 
@@ -71,9 +85,7 @@ O **ImobHub** é uma plataforma web completa de CRM imobiliário com atendimento
 - Até 20 fotos por imóvel com galeria navegável
 - Google Maps interativo com marcador do imóvel
 - Geocodificação automática pelo endereço (Google Geocoding API)
-- Detecção automática de POIs próximos (Google Places API):
-  - 🏫 Escolas, 🏥 Hospitais, 🛒 Supermercados
-  - 🚇 Metrô, 🌳 Parques, 🏦 Bancos, 🍽️ Restaurantes
+- Detecção automática de POIs próximos (Google Places API)
 - Distância e tempo de caminhada para cada POI
 - 16 características selecionáveis (churrasqueira, piscina, academia, etc.)
 - Filtros por tipo, transação (venda/aluguel), status e busca textual
@@ -82,21 +94,29 @@ O **ImobHub** é uma plataforma web completa de CRM imobiliário com atendimento
 - Agente de IA com prompt especializado em atendimento imobiliário
 - RAG busca imóveis do catálogo + POIs automaticamente
 - Filtragem inteligente por critérios do lead (preço, bairro, quartos, tipo)
-- Comandos automáticos:
-  - `[ANOTAR: texto]` — salva observação no lead
-  - `[MOVER: estagio]` — move lead no pipeline
-  - `[TRANSFERIR]` — desativa IA e transfere para corretor humano
+- Comandos automáticos: `[ANOTAR]`, `[MOVER]`, `[TRANSFERIR]`
 - Base de conhecimento customizável (RAG com embeddings OpenAI)
 - Resumo automático de conversas
+- Teste de IA em sandbox antes de ativar
+
+### Voice AI & WebPhone
+- WebPhone embutido no painel (Twilio Voice SDK)
+- Botão de discagem flutuante em todas as páginas
+- Ligações de saída direto do navegador
+- Timer de chamada em tempo real
+- Mute, hangup e controles de chamada
+- Histórico de ligações
+- Voice AI para atendimento automatizado por voz
 
 ### Pipeline & Funil
 - Pipelines dinâmicos com estágios customizáveis
 - Drag & drop de leads entre estágios
 - Cores e posições configuráveis por estágio
 - Múltiplos pipelines (ex: Vendas, Aluguel, Comercial)
-- Visualização Kanban
+- Visualização Kanban dedicada
+- Kanban de IA com status de atendimento automático
 
-### Dashboard
+### Dashboard & Métricas
 - KPIs: Total de Leads, Novos Hoje, Imóveis Ativos, Mensagens Hoje
 - Funil de Vendas visual (dados do pipeline real)
 - Imóveis por status + por tipo + ticket médio
@@ -104,6 +124,26 @@ O **ImobHub** é uma plataforma web completa de CRM imobiliário com atendimento
 - Performance por corretor
 - Tendência semanal de novos leads
 - Tempo médio de resposta
+- Dashboard ROI por canal e campanha
+
+### Landing Pages
+- Criação de landing pages para captação de leads
+- Vinculação a canais específicos
+- Editor de conteúdo integrado
+- URLs públicas com slug customizável
+- Ativação/desativação rápida
+
+### Automações
+- Envio em massa de mensagens por filtros
+- Filtros por status, tags, data de entrada
+- Prévia de alcance antes do envio
+- Histórico de automações executadas
+
+### Relatórios & Exportação
+- Exportação de contatos em Excel
+- Exportação de pipeline por estágio
+- Exportação de mensagens
+- Filtros avançados nos relatórios
 
 ### Agenda
 - Calendário mensal com indicadores visuais
@@ -111,7 +151,56 @@ O **ImobHub** é uma plataforma web completa de CRM imobiliário com atendimento
 - Campo de imóvel/endereço vinculado
 - Status: pendente, concluído, cancelado
 - Painel lateral com detalhes do dia
-- Vista de lista com filtros
+- Integração com Google Calendar
+
+### Integrações Externas
+- Exact Spotter (pré-vendas) — sincronização de leads
+- Google Calendar — agendamento automático pela IA
+- Google Drive — armazenamento de documentos
+- Meta OAuth — conexão com Instagram e Messenger
+
+---
+
+## 🎨 Design System — Fintech Terrosa
+
+O ImobHub utiliza o design system **Fintech Terrosa**, uma identidade visual moderna com tons terrosos que transmitem sofisticação e confiança no mercado imobiliário.
+
+### Paleta de Cores
+
+| Token | Cor | Hex | Uso |
+|-------|-----|-----|-----|
+| `--primary` | Terracota | `#B85C38` | CTAs, destaques, ícones ativos |
+| `--primary-hover` | Terracota escuro | `#9C4D2F` | Hover em botões |
+| `--primary-light` | Terracota 10% | `rgba(184,92,56,0.10)` | Backgrounds sutis, badges |
+| `--sidebar` | Madeira escura | `#2C2220` | Sidebar e elementos escuros |
+| `--sidebar-hover` | Madeira média | `#3D322E` | Hover na sidebar |
+| `--sidebar-text` | Areia | `#A89B94` | Texto inativo na sidebar |
+| `--bg` | Off-white quente | `#F9F7F4` | Background principal |
+| `--surface` | Branco | `#FFFFFF` | Cards e modais |
+| `--text` | Marrom escuro | `#1A1210` | Texto principal |
+| `--muted` | Café claro | `#94867A` | Texto secundário |
+| `--border` | Areia clara | `#E8E2DA` | Bordas |
+| `--success` | Oliva | `#5D7A3A` | Sucesso, disponível |
+| `--warning` | Âmbar | `#C8910A` | Alertas, reservado |
+| `--danger` | Vinho | `#A63D3D` | Erro, exclusão |
+| `--whatsapp` | Verde WhatsApp | `#00a884` | Badges de mensagem |
+
+### Princípios de Design
+
+- **Terracota como acento cirúrgico** — usado apenas em CTAs, itens ativos e destaques-chave
+- **Tons neutros dominam** — a interface não é color-heavy
+- **Tipografia carrega o peso visual** — hierarquia por tamanho/peso, não por cor
+- **Bordas quase invisíveis** — 1px `var(--border)`, elevação por sombras quentes
+- **Transições suaves** — 150ms em todo o sistema
+- **Semântica preservada** — verde para sucesso, âmbar para alerta, vinho para perigo
+
+### Arquivos do Design System
+
+| Arquivo | Função |
+|---------|--------|
+| `globals.css` | Variáveis CSS, resets, estilos globais de input/scrollbar |
+| `Sidebar.tsx` | Navegação lateral com branding ImobHub |
+| `AppLayout.tsx` | Shell da aplicação (sidebar + header mobile) |
 
 ---
 
@@ -121,6 +210,7 @@ O **ImobHub** é uma plataforma web completa de CRM imobiliário com atendimento
 ┌─────────────────────────────────────────────────────────┐
 │                       NAVEGADOR                         │
 │                    Next.js (React)                      │
+│              + Twilio Voice SDK (WebPhone)              │
 └──────────────────────┬──────────────────────────────────┘
                        │ HTTP/HTTPS
                        ▼
@@ -139,60 +229,40 @@ O **ImobHub** é uma plataforma web completa de CRM imobiliário com atendimento
 │                  │   │                                  │
 │ - Login          │   │ - REST API (/api/*)              │
 │ - Dashboard      │   │ - Webhook WhatsApp (/webhook)    │
-│ - Conversas      │   │ - Autenticação JWT               │
-│ - Pipeline       │   │ - CRUD Imóveis + Fotos           │
-│ - Imóveis        │   │ - AI Engine (LLM + RAG)          │
-│ - Agenda         │   │ - Google Maps/Places/Geocoding   │
-│ - Usuários       │   │ - Pipelines Dinâmicos            │
-│ - Canais         │   │ - Activity Timeline              │
-│                  │   │ - Busca Global + Bulk Actions    │
+│ - Dashboard ROI  │   │ - Autenticação JWT               │
+│ - Conversas      │   │ - CRUD Imóveis + Fotos           │
+│ - Pipeline       │   │ - AI Engine (LLM + RAG)          │
+│ - Kanban IA      │   │ - Google Maps/Places/Geocoding   │
+│ - Imóveis        │   │ - Google Calendar                │
+│ - Agenda         │   │ - Pipelines Dinâmicos            │
+│ - Usuários       │   │ - Twilio Voice (WebPhone)        │
+│ - Canais         │   │ - Landing Pages                  │
+│ - Voice AI       │   │ - Exact Spotter Integration      │
+│ - Landing Pages  │   │ - Export (Excel)                 │
+│ - Automações     │   │ - OAuth (Meta)                   │
+│ - Relatórios     │   │ - Bulk Actions                   │
+│ - AI Config      │   │ - Activity Timeline              │
+│ - AI Test        │   │                                  │
 └──────────────────┘   └──────────┬───────────────────────┘
                                   │
-                                  ▼
-                       ┌──────────────────┐
-                       │   PostgreSQL     │
-                       │   Porta 5432     │
-                       │                  │
-                       │ - contacts       │
-                       │ - messages       │
-                       │ - channels       │
-                       │ - users          │
-                       │ - tags           │
-                       │ - contact_tags   │
-                       │ - activities     │
-                       │ - properties     │
-                       │ - property_      │
-                       │   nearby_places  │
-                       │ - property_      │
-                       │   interests      │
-                       │ - pipelines      │
-                       │ - pipeline_      │
-                       │   stages         │
-                       │ - ai_configs     │
-                       │ - knowledge_     │
-                       │   documents      │
-                       │ - ai_conver-     │
-                       │   sation_        │
-                       │   summaries      │
-                       │ - ai_messages    │
-                       │ - schedules      │
-                       └──────────────────┘
-
-┌──────────────────────┐   ┌──────────────────────┐
-│   Meta / WhatsApp    │   │     OpenAI API       │
-│     Cloud API        │   │                      │
-│                      │   │ - GPT-4o (respostas) │
-│ - Enviar mensagens   │   │ - Embeddings (RAG)   │
-│ - Receber webhook    │   │                      │
-│ - Baixar mídias      │   └──────────────────────┘
-│ - Templates          │
-└──────────────────────┘   ┌──────────────────────┐
-                           │   Google APIs        │
-                           │                      │
-                           │ - Maps JavaScript    │
-                           │ - Geocoding          │
-                           │ - Places Nearby      │
-                           └──────────────────────┘
+                    ┌─────────────┼─────────────┐
+                    ▼             ▼             ▼
+          ┌──────────────┐ ┌───────────┐ ┌───────────────┐
+          │  PostgreSQL  │ │  OpenAI   │ │  Google APIs  │
+          │  Porta 5432  │ │           │ │               │
+          │              │ │ - GPT-4o  │ │ - Maps JS     │
+          │ 18+ tabelas  │ │ - Embed.  │ │ - Geocoding   │
+          └──────────────┘ └───────────┘ │ - Places      │
+                                         │ - Calendar    │
+          ┌──────────────┐ ┌───────────┐ └───────────────┘
+          │ Meta / WA    │ │  Twilio   │
+          │ Cloud API    │ │           │ ┌───────────────┐
+          │              │ │ - Voice   │ │ Exact Spotter │
+          │ - Mensagens  │ │ - WebRTC  │ │               │
+          │ - Webhook    │ │           │ │ - Leads sync  │
+          │ - Templates  │ └───────────┘ └───────────────┘
+          │ - OAuth      │
+          └──────────────┘
 ```
 
 ### Fluxo de uma mensagem recebida
@@ -224,6 +294,14 @@ O **ImobHub** é uma plataforma web completa de CRM imobiliário com atendimento
 8. Resposta enviada automaticamente via WhatsApp API
 9. Comandos automáticos processados (`[ANOTAR]`, `[MOVER]`, `[TRANSFERIR]`)
 
+### Fluxo de ligação (WebPhone)
+
+1. Corretor clica no botão de telefone no painel
+2. Frontend solicita token Twilio via `/api/voice/token`
+3. Twilio Voice SDK conecta via WebRTC
+4. Chamada é roteada pelo Twilio para o número do lead
+5. Timer e controles de chamada exibidos na interface
+
 ---
 
 ## 🛠 Tecnologias Utilizadas
@@ -232,6 +310,7 @@ O **ImobHub** é uma plataforma web completa de CRM imobiliário com atendimento
 |--------|-----------|--------|
 | **Frontend** | Next.js (React) | 15.x |
 | **Estilização** | Tailwind CSS | 3.x |
+| **Design System** | Fintech Terrosa (CSS Variables) | — |
 | **Ícones** | Lucide React | latest |
 | **HTTP Client** | Axios | latest |
 | **Toasts** | Sonner | latest |
@@ -242,13 +321,17 @@ O **ImobHub** é uma plataforma web completa de CRM imobiliário com atendimento
 | **Autenticação** | JWT (PyJWT) + bcrypt | — |
 | **HTTP (backend)** | httpx | latest |
 | **Compressão de imagem** | Pillow | latest |
+| **Exportação Excel** | openpyxl | latest |
 | **WhatsApp API** | Meta Cloud API | v22.0 |
 | **WhatsApp (QR Code)** | Evolution API v2 | latest |
+| **Voice / Telefonia** | Twilio Voice SDK | latest |
 | **IA / LLM** | OpenAI GPT-4o | latest |
 | **Embeddings** | OpenAI text-embedding-3-small | latest |
 | **Mapas** | Google Maps JavaScript API | latest |
 | **Geocodificação** | Google Geocoding API | latest |
 | **POIs** | Google Places API | latest |
+| **Calendário** | Google Calendar API | latest |
+| **Pré-vendas** | Exact Spotter API | latest |
 | **Servidor Web** | Nginx | 1.24+ |
 | **Hospedagem** | Contabo VPS | Ubuntu 24.04 |
 | **Controle de versão** | Git + GitHub | — |
@@ -262,6 +345,8 @@ O **ImobHub** é uma plataforma web completa de CRM imobiliário com atendimento
 - **Número de telefone** vinculado ao WhatsApp Business API
 - **Conta OpenAI** com API key (para o agente de IA)
 - **Chave API Google Maps** com Maps, Geocoding e Places ativados
+- **Conta Twilio** com Voice habilitado (para WebPhone)
+- **Google Calendar API** habilitada (para agendamento automático)
 - **Servidor VPS** (Contabo, AWS, DigitalOcean, etc.)
 - **Git e GitHub** configurados
 - **Node.js 20+** instalado
@@ -347,6 +432,8 @@ Pillow
 python-multipart
 google-api-python-client
 google-auth
+openpyxl
+twilio
 ```
 
 ### 3.3 — Criar arquivo .env
@@ -368,6 +455,22 @@ OPENAI_API_KEY=sua_chave_openai
 
 # Google Maps
 GOOGLE_MAPS_API_KEY=sua_chave_google_maps
+
+# Twilio (Voice / WebPhone)
+TWILIO_ACCOUNT_SID=seu_account_sid
+TWILIO_AUTH_TOKEN=seu_auth_token
+TWILIO_TWIML_APP_SID=seu_twiml_app_sid
+TWILIO_PHONE_NUMBER=+5511999999999
+
+# Google Calendar (opcional)
+GOOGLE_CALENDAR_CREDENTIALS=path/to/credentials.json
+
+# Exact Spotter (opcional)
+EXACT_API_TOKEN=seu_token_exact
+
+# Meta OAuth (opcional — Instagram/Messenger)
+META_APP_ID=seu_app_id
+META_APP_SECRET=seu_app_secret
 ```
 
 ### 3.4 — Rodar o Backend
@@ -408,7 +511,10 @@ As tabelas são criadas automaticamente ao rodar o backend. Tabelas principais:
 | `ai_configs` | Configuração da IA por canal |
 | `knowledge_documents` | Base de conhecimento para RAG |
 | `ai_conversation_summaries` | Resumos de conversas da IA |
+| `ai_messages` | Log de mensagens da IA |
 | `schedules` | Agendamentos (visitas, reuniões, ligações) |
+| `landing_pages` | Landing pages para captação |
+| `exact_leads` | Leads importados do Exact Spotter |
 
 ### 4.3 — Criar Usuário Admin
 
@@ -637,12 +743,16 @@ A IA atende leads automaticamente via WhatsApp com conhecimento do catálogo de 
 
 ### 10.3 — Configuração
 
-Acesse **Canais → Editar canal → Configurações da IA**:
+Acesse **AI Config** no menu ou **Canais → Editar canal → Configurações da IA**:
 - Ativar/desativar IA
 - Modelo (GPT-4o, GPT-4o-mini)
 - Temperatura e max tokens
 - Prompt customizado
 - Base de conhecimento (documentos para RAG)
+
+### 10.4 — Teste em Sandbox
+
+Acesse **AI Test** para testar o agente de IA em modo sandbox antes de ativar em produção.
 
 ---
 
@@ -656,7 +766,7 @@ Acesse **Pipeline** → Clique no ícone ⚙️ para gerenciar.
 
 | Estágio | Key | Cor |
 |---------|-----|-----|
-| Novo Lead | novo_lead | Azul |
+| Novo Lead | novo_lead | Terracota |
 | Primeiro Contato | primeiro_contato | Âmbar |
 | Qualificado | qualificado | Roxo |
 | Visita Agendada | visita_agendada | Ciano |
@@ -694,7 +804,7 @@ NEXT_PUBLIC_GOOGLE_MAPS_KEY=AIzaSy...
 | Escola | 🏫 | Âmbar | 1500m |
 | Hospital | 🏥 | Vermelho | 1500m |
 | Supermercado | 🛒 | Verde | 1500m |
-| Metrô | 🚇 | Índigo | 1500m |
+| Metrô | 🚇 | Terracota | 1500m |
 | Parque | 🌳 | Lima | 1500m |
 | Banco | 🏦 | Cinza | 1500m |
 | Restaurante | 🍽️ | Laranja | 1500m |
@@ -707,7 +817,7 @@ Acesse **Agenda** no menu. Tipos de agendamento:
 
 | Tipo | Ícone | Cor | Uso |
 |------|-------|-----|-----|
-| Visita | 🏠 | Azul | Visita a imóvel |
+| Visita | 🏠 | Terracota | Visita a imóvel |
 | Reunião | 🤝 | Roxo | Reunião com cliente |
 | Ligação | 📞 | Verde | Ligação de follow-up |
 
@@ -725,6 +835,111 @@ Cada agendamento tem: Nome do lead, telefone, imóvel/endereço, data, horário,
 | Messenger | Meta Graph API | OAuth |
 
 Gerencie canais em **Canais** no menu lateral.
+
+---
+
+## 📞 ETAPA 15 — Voice AI e WebPhone
+
+### 15.1 — WebPhone (Twilio)
+
+O ImobHub possui um discador embutido no painel que permite fazer ligações direto do navegador.
+
+**Configuração:**
+1. Crie conta no [Twilio](https://www.twilio.com)
+2. Configure um TwiML App com as URLs de voice
+3. Compre um número de telefone
+4. Adicione as variáveis no `.env`
+
+**Funcionalidades:**
+- Botão flutuante de telefone em todas as páginas
+- Discagem direta para qualquer número
+- Timer de chamada em tempo real
+- Controles: mute, hangup
+- Status visual: conectando, em chamada, encerrado
+
+### 15.2 — Voice AI
+
+Atendimento automatizado por voz com IA, acessível em **Voice AI** no menu.
+
+---
+
+## 🌐 ETAPA 16 — Landing Pages
+
+Crie landing pages para captação de leads vinculadas a canais específicos.
+
+Acesse **Landing Pages** no menu:
+- Criar nova página com título, conteúdo e slug
+- Vincular a um canal de WhatsApp
+- URL pública: `https://seu-dominio.com/lp/slug-da-pagina`
+- Ativar/desativar rapidamente
+
+---
+
+## ⚡ ETAPA 17 — Automações
+
+Envio em massa de mensagens com filtros avançados.
+
+Acesse **Automações** no menu:
+- Filtrar contatos por status, tags, data de entrada
+- Prévia do alcance antes do envio
+- Selecionar template ou mensagem livre
+- Histórico de execuções
+
+---
+
+## 📈 ETAPA 18 — Relatórios e Exportação
+
+Exporte dados em planilhas Excel (.xlsx).
+
+Acesse **Relatórios** no menu:
+- **Contatos** — lista completa de leads com todos os campos
+- **Pipeline** — leads por estágio do funil
+- **Mensagens** — histórico de conversas
+
+---
+
+## 💰 ETAPA 19 — Dashboard ROI
+
+Dashboard analítico focado em retorno sobre investimento.
+
+Acesse **Dashboard ROI** no menu:
+- ROI por canal de captação
+- Custo por lead
+- Taxa de conversão por campanha
+- Métricas comparativas
+
+---
+
+## 🎯 ETAPA 20 — Exact Spotter (Integração)
+
+Integração com Exact Spotter para gestão de pré-vendas.
+
+**Configuração:**
+1. Obtenha token da API Exact
+2. Adicione `EXACT_API_TOKEN` no `.env`
+
+**Funcionalidades:**
+- Sincronização de leads do Exact
+- Visualização de leads importados
+- Estatísticas de pré-vendas
+
+---
+
+## 📅 ETAPA 21 — Google Calendar
+
+Integração com Google Calendar para agendamento automático.
+
+**Configuração:**
+1. Ative a Calendar API no Google Cloud Console
+2. Crie credenciais de serviço (Service Account)
+3. Compartilhe o calendário com a service account
+4. Adicione o path das credenciais no `.env`
+
+**Funcionalidades:**
+- Consulta de horários disponíveis
+- Criação automática de eventos pela IA
+- Detecção de conflitos de agenda
+- Slots disponíveis por consultor
 
 ---
 
@@ -747,7 +962,18 @@ imobhub/
 │   │   ├── ai_routes.py            # Config IA, knowledge, teste
 │   │   ├── pipeline_routes.py      # Pipelines dinâmicos + estágios
 │   │   ├── kanban_routes.py        # Kanban de leads
-│   │   └── create_tables.py        # Script criação de tabelas
+│   │   ├── schedule_routes.py      # Agenda de visitas/reuniões
+│   │   ├── calendar_routes.py      # Integração Google Calendar
+│   │   ├── google_calendar.py      # Client Google Calendar API
+│   │   ├── google_drive.py         # Client Google Drive API
+│   │   ├── twilio_routes.py        # Voice / WebPhone (Twilio)
+│   │   ├── landing_routes.py       # Landing pages CRUD
+│   │   ├── export_routes.py        # Exportação Excel (.xlsx)
+│   │   ├── exact_routes.py         # Integração Exact Spotter
+│   │   ├── exact_spotter.py        # Client Exact Spotter API
+│   │   ├── oauth_routes.py         # OAuth Meta (Instagram/Messenger)
+│   │   ├── create_tables.py        # Script criação de tabelas
+│   │   └── migrate_ai.py           # Migração de dados de IA
 │   ├── requirements.txt
 │   ├── .env
 │   └── uploads/
@@ -755,27 +981,42 @@ imobhub/
 ├── frontend/
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── login/page.tsx
-│   │   │   ├── dashboard/page.tsx
-│   │   │   ├── conversations/page.tsx
-│   │   │   ├── pipeline/page.tsx
-│   │   │   ├── properties/page.tsx
-│   │   │   ├── agenda/page.tsx
-│   │   │   ├── users/page.tsx
-│   │   │   └── canais/page.tsx
+│   │   │   ├── globals.css         # Design System Fintech Terrosa
+│   │   │   ├── layout.tsx          # Layout raiz
+│   │   │   ├── login/page.tsx      # Tela de login
+│   │   │   ├── dashboard/page.tsx  # Dashboard principal
+│   │   │   ├── dashboard-roi/page.tsx # Dashboard ROI
+│   │   │   ├── conversations/page.tsx # Chat WhatsApp
+│   │   │   ├── pipeline/page.tsx   # Pipeline de vendas
+│   │   │   ├── kanban/page.tsx     # Kanban de IA
+│   │   │   ├── properties/page.tsx # Catálogo de imóveis
+│   │   │   ├── agenda/page.tsx     # Agenda de visitas
+│   │   │   ├── users/page.tsx      # Gestão de usuários
+│   │   │   ├── canais/page.tsx     # Gestão de canais
+│   │   │   ├── canais/callback/page.tsx # OAuth callback
+│   │   │   ├── ai-config/page.tsx  # Configuração da IA
+│   │   │   ├── ai-test/page.tsx    # Teste sandbox da IA
+│   │   │   ├── voice-ai/page.tsx   # Configuração Voice AI
+│   │   │   ├── calls/page.tsx      # Histórico de ligações
+│   │   │   ├── landing-pages/page.tsx # Gestão landing pages
+│   │   │   ├── lp/[slug]/page.tsx  # Renderização pública de LP
+│   │   │   ├── automacoes/page.tsx # Automações de envio
+│   │   │   ├── relatorios/page.tsx # Relatórios e exportação
+│   │   │   └── leads-pos/page.tsx  # Leads pós-venda
 │   │   ├── components/
-│   │   │   ├── Sidebar.tsx
-│   │   │   ├── AppLayout.tsx
-│   │   │   ├── GoogleMap.tsx
-│   │   │   ├── CommandPalette.tsx
-│   │   │   ├── ConfirmModal.tsx
-│   │   │   └── ActivityTimeline.tsx
+│   │   │   ├── Sidebar.tsx         # Navegação lateral (Fintech Terrosa)
+│   │   │   ├── AppLayout.tsx       # Shell da aplicação
+│   │   │   ├── Webphone.tsx        # Discador Twilio embutido
+│   │   │   ├── GoogleMap.tsx       # Componente Google Maps
+│   │   │   ├── CommandPalette.tsx  # Busca global (⌘K)
+│   │   │   ├── ConfirmModal.tsx    # Modal de confirmação
+│   │   │   └── ActivityTimeline.tsx # Timeline de atividades
 │   │   ├── contexts/
-│   │   │   └── auth-context.tsx
+│   │   │   └── auth-context.tsx    # Contexto de autenticação
 │   │   └── lib/
-│   │       └── api.ts
+│   │       └── api.ts              # Client Axios configurado
 │   ├── public/
-│   │   └── logo-icon-white.png
+│   │   └── logo-icon-white.png     # Logo ImobHub (branca)
 │   └── package.json
 └── README.md
 ```
@@ -809,7 +1050,6 @@ imobhub/
 | GET | `/api/properties/stats/summary` | Estatísticas |
 | POST | `/api/properties/{id}/photos` | Upload fotos |
 | DELETE | `/api/properties/{id}/photos` | Deletar foto |
-| GET | `/api/properties/photos/{filename}` | Servir foto |
 
 ### Pipeline
 | Método | Rota | Descrição |
@@ -835,6 +1075,51 @@ imobhub/
 | PATCH | `/api/schedules/{id}` | Atualizar |
 | DELETE | `/api/schedules/{id}` | Deletar |
 
+### Voice / WebPhone
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| GET | `/api/voice/token` | Token Twilio para WebRTC |
+| POST | `/api/voice/call` | Iniciar ligação |
+| POST | `/api/voice/voice` | TwiML webhook (entrada) |
+| POST | `/api/voice/voice-outbound` | TwiML webhook (saída) |
+
+### Landing Pages
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| GET | `/api/landing-pages` | Listar páginas |
+| POST | `/api/landing-pages` | Criar página |
+| GET | `/api/landing-pages/{id}` | Detalhe |
+| PUT | `/api/landing-pages/{id}` | Atualizar |
+
+### Exportação
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| GET | `/api/export/contacts` | Exportar contatos (.xlsx) |
+| GET | `/api/export/pipeline` | Exportar pipeline (.xlsx) |
+| GET | `/api/export/messages` | Exportar mensagens (.xlsx) |
+
+### Exact Spotter
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| GET | `/api/exact` | Listar leads Exact |
+| POST | `/api/exact/sync` | Sincronizar leads |
+| GET | `/api/exact/stats` | Estatísticas |
+| GET | `/api/exact/{id}/details` | Detalhes do lead |
+
+### Google Calendar
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| GET | `/api/calendar/consultants` | Listar consultores |
+| GET | `/api/calendar/available-dates/{key}` | Datas disponíveis |
+| GET | `/api/calendar/available-slots/{key}/{date}` | Horários disponíveis |
+| POST | `/api/calendar/book` | Agendar horário |
+
+### OAuth
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| GET | `/api/oauth/meta/url` | URL de autorização Meta |
+| POST | `/api/oauth/meta/callback` | Callback OAuth |
+
 ---
 
 ## 🔐 Variáveis de Ambiente
@@ -858,6 +1143,22 @@ OPENAI_API_KEY=
 
 # Google Maps
 GOOGLE_MAPS_API_KEY=
+
+# Twilio (Voice)
+TWILIO_ACCOUNT_SID=
+TWILIO_AUTH_TOKEN=
+TWILIO_TWIML_APP_SID=
+TWILIO_PHONE_NUMBER=
+
+# Google Calendar (opcional)
+GOOGLE_CALENDAR_CREDENTIALS=
+
+# Exact Spotter (opcional)
+EXACT_API_TOKEN=
+
+# Meta OAuth (opcional)
+META_APP_ID=
+META_APP_SECRET=
 ```
 
 ### Frontend (.env.local)
@@ -931,6 +1232,11 @@ curl "https://seu-dominio.com/webhook?hub.mode=subscribe&hub.verify_token=SEU_TO
 - Verifique se a IA está ativa no canal
 - Verifique `OPENAI_API_KEY` no `.env`
 - Verifique logs: `journalctl -u imobhub-backend -n 50`
+
+### WebPhone não conecta
+- Verifique credenciais Twilio no `.env`
+- Verifique se TwiML App está configurado com as URLs corretas
+- Verifique permissão de microfone no navegador
 
 ---
 

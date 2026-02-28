@@ -65,7 +65,6 @@ export default function AIConfigPage() {
     try {
       const res = await api.get('/channels');
       setChannels(res.data);
-      // Selecionar canal da IA (id 2) por padrão, ou o primeiro
       const aiChannel = res.data.find((c: ChannelInfo) => c.id === 2);
       setActiveChannel(aiChannel || res.data[0] || null);
     } catch (err) {
@@ -132,7 +131,6 @@ export default function AIConfigPage() {
       setUploadSuccess(`"${uploadTitle}" enviado com sucesso! ${res.data.chunks_saved} chunks criados (${res.data.total_tokens} tokens)`);
       setUploadTitle('');
       setUploadFile(null);
-      // Limpar input file
       const fileInput = document.getElementById('doc-file') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
       loadDocuments();
@@ -164,17 +162,20 @@ export default function AIConfigPage() {
 
   return (
     <AppLayout>
-      <div className="flex-1 bg-[#f8f9fb] overflow-y-auto">
+      <div className="flex-1 overflow-y-auto" style={{ backgroundColor: 'var(--bg)' }}>
         <div className="max-w-4xl mx-auto p-6 space-y-6">
 
           {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-md">
-                <Bot className="w-5 h-5 text-white" />
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm"
+                style={{ backgroundColor: 'var(--primary-light)' }}
+              >
+                <Bot className="w-5 h-5" style={{ color: 'var(--primary)' }} />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-[#27273D]">Configuração da IA</h1>
+                <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>Configuração da IA</h1>
                 <p className="text-[13px] text-gray-400">Configure o agente Nat para atendimento automático</p>
               </div>
             </div>
@@ -183,19 +184,20 @@ export default function AIConfigPage() {
             <div className="relative">
               <button
                 onClick={() => setShowChannelMenu(!showChannelMenu)}
-                className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-xl border border-gray-200 text-[13px] font-medium text-gray-700 hover:border-gray-300 transition-all shadow-sm"
+                className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-xl border border-gray-100 text-[13px] font-medium text-gray-700 hover:border-gray-300 transition-all shadow-sm"
               >
-                <Bot className="w-4 h-4 text-purple-500" />
+                <Bot className="w-4 h-4" style={{ color: 'var(--primary)' }} />
                 {activeChannel?.name || 'Selecionar canal'}
                 <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${showChannelMenu ? 'rotate-180' : ''}`} />
               </button>
               {showChannelMenu && (
-                <div className="absolute right-0 top-full mt-1 bg-white rounded-xl border border-gray-200 shadow-lg z-10 overflow-hidden min-w-[220px]">
+                <div className="absolute right-0 top-full mt-1 bg-white rounded-xl border border-gray-100 shadow-lg z-10 overflow-hidden min-w-[220px]">
                   {channels.map(ch => (
                     <button
                       key={ch.id}
                       onClick={() => { setActiveChannel(ch); setShowChannelMenu(false); }}
-                      className={`w-full flex items-center gap-2 px-4 py-2.5 hover:bg-gray-50 text-[13px] text-left ${activeChannel?.id === ch.id ? 'bg-purple-50 text-purple-700' : 'text-gray-700'}`}
+                      className="w-full flex items-center gap-2 px-4 py-2.5 hover:bg-gray-50 text-[13px] text-left text-gray-700"
+                      style={activeChannel?.id === ch.id ? { backgroundColor: 'var(--primary-light)', color: 'var(--primary)' } : {}}
                     >
                       <Bot className="w-4 h-4" />
                       {ch.name}
@@ -208,19 +210,31 @@ export default function AIConfigPage() {
 
           {loading ? (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-6 h-6 animate-spin text-purple-500" />
+              <Loader2 className="w-6 h-6 animate-spin" style={{ color: 'var(--primary)' }} />
             </div>
           ) : config && (
             <>
               {/* Toggle Principal */}
-              <div className={`rounded-2xl border p-5 transition-all ${config.is_enabled ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-gray-200'}`}>
+              <div
+                className="rounded-2xl border p-5 transition-all"
+                style={config.is_enabled
+                  ? { backgroundColor: 'var(--primary-light)', borderColor: 'var(--primary)' }
+                  : { backgroundColor: '#fff', borderColor: '#e5e7eb' }
+                }
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${config.is_enabled ? 'bg-emerald-100' : 'bg-gray-100'}`}>
-                      <Sparkles className={`w-5 h-5 ${config.is_enabled ? 'text-emerald-600' : 'text-gray-400'}`} />
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center"
+                      style={{ backgroundColor: config.is_enabled ? 'var(--primary-light)' : '#f3f4f6' }}
+                    >
+                      <Sparkles
+                        className="w-5 h-5"
+                        style={{ color: config.is_enabled ? 'var(--primary)' : '#9ca3af' }}
+                      />
                     </div>
                     <div>
-                      <p className="font-semibold text-[15px] text-[#27273D]">
+                      <p className="font-semibold text-[15px]" style={{ color: 'var(--text)' }}>
                         {config.is_enabled ? '🤖 Agente Nat Ativo' : 'Agente Nat Desativado'}
                       </p>
                       <p className="text-[12px] text-gray-400">
@@ -242,20 +256,19 @@ export default function AIConfigPage() {
               </div>
 
               {/* Configurações do Modelo */}
-              <div className="bg-white rounded-2xl border border-gray-200 p-5 space-y-5">
+              <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-5">
                 <div className="flex items-center gap-2">
                   <Settings className="w-4 h-4 text-gray-400" />
                   <p className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Configurações do Modelo</p>
                 </div>
 
                 <div className="grid grid-cols-3 gap-4">
-                  {/* Modelo */}
                   <div>
                     <label className="block text-[12px] font-medium text-gray-500 mb-1.5">Modelo</label>
                     <select
                       value={config.model}
                       onChange={e => setConfig({ ...config, model: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-[13px] text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-400"
+                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-[13px] text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:border-transparent"
                     >
                       <option value="gpt-5">GPT-5</option>
                       <option value="gpt-5-mini">GPT-5 Mini</option>
@@ -264,13 +277,12 @@ export default function AIConfigPage() {
                     </select>
                   </div>
 
-                  {/* Temperatura */}
                   <div>
                     <label className="block text-[12px] font-medium text-gray-500 mb-1.5">Temperatura</label>
                     <select
                       value={config.temperature}
                       onChange={e => setConfig({ ...config, temperature: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-[13px] text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-400"
+                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-[13px] text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:border-transparent"
                     >
                       <option value="0.3">0.3 — Preciso</option>
                       <option value="0.5">0.5 — Balanceado</option>
@@ -279,13 +291,12 @@ export default function AIConfigPage() {
                     </select>
                   </div>
 
-                  {/* Max Tokens */}
                   <div>
                     <label className="block text-[12px] font-medium text-gray-500 mb-1.5">Max Tokens</label>
                     <select
                       value={config.max_tokens}
                       onChange={e => setConfig({ ...config, max_tokens: parseInt(e.target.value) })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-[13px] text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-400"
+                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-[13px] text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:border-transparent"
                     >
                       <option value={300}>300 — Curto</option>
                       <option value={500}>500 — Médio</option>
@@ -297,7 +308,7 @@ export default function AIConfigPage() {
               </div>
 
               {/* Prompt do Sistema */}
-              <div className="bg-white rounded-2xl border border-gray-200 p-5 space-y-3">
+              <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-3">
                 <div className="flex items-center gap-2">
                   <Bot className="w-4 h-4 text-gray-400" />
                   <p className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Personalidade da Nat</p>
@@ -310,7 +321,7 @@ export default function AIConfigPage() {
                   onChange={e => setConfig({ ...config, system_prompt: e.target.value })}
                   rows={10}
                   placeholder="Ex: Você é a assistente virtual da instituição. Seja cordial, profissional e objetiva..."
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 text-[13px] text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-400 resize-none leading-relaxed"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 text-[13px] text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:border-transparent resize-none leading-relaxed"
                 />
                 <div className="text-right text-[11px] text-gray-400">
                   {config.system_prompt?.length || 0} caracteres
@@ -328,25 +339,26 @@ export default function AIConfigPage() {
                 <button
                   onClick={saveConfig}
                   disabled={saving}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-purple-600 text-white rounded-xl text-[13px] font-medium hover:bg-purple-700 transition-all shadow-sm disabled:opacity-50"
+                  className="flex items-center gap-2 px-6 py-2.5 text-white rounded-xl text-[13px] font-medium transition-all shadow-sm disabled:opacity-50 hover:opacity-90"
+                  style={{ backgroundColor: 'var(--primary)' }}
                 >
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                   {saving ? 'Salvando...' : 'Salvar Configurações'}
                 </button>
               </div>
 
-              {/* ════════════════════════════════ */}
-              {/* BASE DE CONHECIMENTO (RAG)      */}
-              {/* ════════════════════════════════ */}
-
+              {/* BASE DE CONHECIMENTO (RAG) */}
               <div className="pt-4 border-t border-gray-200">
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-md">
-                      <Database className="w-5 h-5 text-white" />
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm"
+                      style={{ backgroundColor: 'var(--primary-light)' }}
+                    >
+                      <Database className="w-5 h-5" style={{ color: 'var(--primary)' }} />
                     </div>
                     <div>
-                      <h2 className="text-lg font-bold text-[#27273D]">Base de Conhecimento</h2>
+                      <h2 className="text-lg font-bold" style={{ color: 'var(--text)' }}>Base de Conhecimento</h2>
                       <p className="text-[12px] text-gray-400">
                         Documentos que a Nat usa para responder ({documents.length} docs · {totalChunks} chunks · {totalTokens.toLocaleString()} tokens)
                       </p>
@@ -355,7 +367,7 @@ export default function AIConfigPage() {
                 </div>
 
                 {/* Upload */}
-                <div className="bg-white rounded-2xl border border-gray-200 p-5 space-y-4 mb-4">
+                <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-4 mb-4">
                   <p className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Enviar novo documento</p>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -364,8 +376,8 @@ export default function AIConfigPage() {
                         type="text"
                         value={uploadTitle}
                         onChange={e => setUploadTitle(e.target.value)}
-                        placeholder="Ex: Grade Curricular - Saúde Mental"
-                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-[13px] bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                        placeholder="Ex: Catálogo de Imóveis - Centro"
+                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-[13px] bg-gray-50 focus:outline-none focus:ring-2 focus:border-transparent"
                       />
                     </div>
                     <div>
@@ -375,7 +387,7 @@ export default function AIConfigPage() {
                         type="file"
                         accept=".txt,.md,.csv"
                         onChange={e => setUploadFile(e.target.files?.[0] || null)}
-                        className="w-full px-3 py-2 rounded-xl border border-gray-200 text-[13px] bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-[12px] file:font-medium file:bg-blue-50 file:text-blue-600"
+                        className="w-full px-3 py-2 rounded-xl border border-gray-200 text-[13px] bg-gray-50 focus:outline-none focus:ring-2 focus:border-transparent file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-[12px] file:font-medium"
                       />
                     </div>
                   </div>
@@ -397,7 +409,8 @@ export default function AIConfigPage() {
                     <button
                       onClick={handleUpload}
                       disabled={uploading || !uploadTitle.trim() || !uploadFile}
-                      className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl text-[13px] font-medium hover:bg-blue-700 transition-all shadow-sm disabled:opacity-50"
+                      className="flex items-center gap-2 px-5 py-2.5 text-white rounded-xl text-[13px] font-medium transition-all shadow-sm disabled:opacity-50 hover:opacity-90"
+                      style={{ backgroundColor: 'var(--primary)' }}
                     >
                       {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                       {uploading ? 'Processando...' : 'Enviar e Processar'}
@@ -411,14 +424,17 @@ export default function AIConfigPage() {
                     {documents.map(doc => (
                       <div
                         key={doc.title}
-                        className="bg-white rounded-xl border border-gray-200 px-4 py-3 flex items-center justify-between hover:border-gray-300 transition-all"
+                        className="bg-white rounded-xl border border-gray-100 px-4 py-3 flex items-center justify-between hover:border-gray-300 transition-all"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
-                            <FileText className="w-4 h-4 text-blue-500" />
+                          <div
+                            className="w-9 h-9 rounded-lg flex items-center justify-center"
+                            style={{ backgroundColor: 'var(--primary-light)' }}
+                          >
+                            <FileText className="w-4 h-4" style={{ color: 'var(--primary)' }} />
                           </div>
                           <div>
-                            <p className="text-[13px] font-medium text-[#27273D]">{doc.title}</p>
+                            <p className="text-[13px] font-medium" style={{ color: 'var(--text)' }}>{doc.title}</p>
                             <p className="text-[11px] text-gray-400">
                               {doc.chunks} chunks · {doc.total_tokens.toLocaleString()} tokens
                               {doc.created_at && ` · ${new Date(doc.created_at).toLocaleDateString('pt-BR')}`}
@@ -441,7 +457,7 @@ export default function AIConfigPage() {
                   <div className="text-center py-10 text-gray-400">
                     <Database className="w-10 h-10 mx-auto mb-3 opacity-30" />
                     <p className="text-[13px]">Nenhum documento na base de conhecimento</p>
-                    <p className="text-[11px] mt-1">Envie documentos sobre cursos, preços e FAQ para a Nat usar nas respostas</p>
+                    <p className="text-[11px] mt-1">Envie documentos sobre imóveis, preços e FAQ para a Nat usar nas respostas</p>
                   </div>
                 )}
               </div>

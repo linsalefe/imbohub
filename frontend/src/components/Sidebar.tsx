@@ -24,6 +24,7 @@ import {
   X,
   Search,
   Download,
+  Bot,
 } from 'lucide-react';
 
 const menuGroups = [
@@ -42,6 +43,7 @@ const menuGroups = [
       { href: '/users', label: 'Usuários', icon: Users },
       { href: '/agenda', label: 'Agenda', icon: Calendar },
       { href: '/canais', label: 'Canais', icon: Radio },
+      { href: '/ai-config', label: 'IA Config', icon: Bot },
     ],
   },
 ];
